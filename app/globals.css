@@ -3,11 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 112, 112, 112;
-  --background-rgb: 233, 228, 212;
+  --foreground-rgba: 33, 29, 30, 1;
+  --background-rgba: 233, 228, 212, 0.5;
 }
 
 body {
-    color: rgb(var(--foreground-rgb));
-    background: rgb(var(--background-rgb))
+    color: rgba(var(--foreground-rgba));
+    position: relative;
+    background-color: rgba(var(--background-rgb));
+    background-image: url('../public/textured_paper.png');
+    background-blend-mode: overlay;
   }

@@ -20,23 +20,47 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+      <link rel="icon" href="./nn-flag.png" sizes="100" />
+      </head>
       <body className={roboto.className}>
-        <nav className="flex justify-between sticky">
-          <Link href="./">
-            <Image
-              src="/nn-logo.svg"
-              alt="Noah's Navy Logo"
-              width={150}
-              height={0}
-            />
-          </Link>
-          <div className="flex justify-between space-x-7 origin-left rotate-90 absolute top-0 right-0">
-            <Link href="/projects">Projects</Link>
-            <Link href="/projects">About</Link>
-            <Link href="/projects">Contacts</Link>
+        <div className="p-2">
+          <div className=" w-full p-3 border-b-2 border-nn-dark-gray">
+            <Link href="./">
+              <Image
+                src="/nn-logo.svg"
+                alt="Noah's Navy Logo"
+                width={200}
+                height={0}
+              />
+            </Link>
           </div>
-        </nav>
-        {children}
+          <div className="flex justify-between">
+            {children}
+            <nav className="sticky">
+              <div className="nav-options grid grid-flow-column place-content-end uppercase">
+                <Link
+                  href="/projects"
+                  className="border-2 border-nn-dark-gray border-t-0 p-2"
+                >
+                  Projects
+                </Link>
+                <Link
+                  href="/about"
+                  className="border-2 border-nn-dark-gray border-t-0 p-2 "
+                >
+                  About
+                </Link>
+                <Link
+                  href="/contacts"
+                  className="border-2 border-nn-dark-gray border-t-0 p-2 "
+                >
+                  Contacts
+                </Link>
+              </div>
+            </nav>
+          </div>
+        </div>
       </body>
     </html>
   );
