@@ -21,46 +21,31 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-      <link rel="icon" href="./nn-flag.png" sizes="100" />
+        <link rel="icon" href="./nn-flag.png" sizes="100" />
       </head>
       <body className={roboto.className}>
-        <div className="p-2">
-          <div className=" w-full p-3 border-b-2 border-nn-dark-gray">
-            <Link href="./">
-              <Image
-                src="/nn-logo.svg"
-                alt="Noah's Navy Logo"
-                width={200}
-                height={0}
-              />
+        <nav className="sticky flex justify-between p-5 align-middle my-auto">
+          <Link href="./">
+            <Image
+              src="/nn-logo.svg"
+              alt="Noah's Navy Logo"
+              width={200}
+              height={0}
+            />
+          </Link>
+          <div className="uppercase my-auto text-blue-900">
+            <Link href="/projects" className="mx-3">
+              Projects
+            </Link>
+            <Link href="/about" className="mx-3">
+              About
+            </Link>
+            <Link href="/contacts" className="mx-3">
+              Contacts
             </Link>
           </div>
-          <div className="flex justify-between">
-            {children}
-            <nav className="sticky">
-              <div className="nav-options grid grid-flow-column place-content-end uppercase">
-                <Link
-                  href="/projects"
-                  className="border-2 border-nn-dark-gray border-t-0 p-2"
-                >
-                  Projects
-                </Link>
-                <Link
-                  href="/about"
-                  className="border-2 border-nn-dark-gray border-t-0 p-2 "
-                >
-                  About
-                </Link>
-                <Link
-                  href="/contacts"
-                  className="border-2 border-nn-dark-gray border-t-0 p-2 "
-                >
-                  Contacts
-                </Link>
-              </div>
-            </nav>
-          </div>
-        </div>
+        </nav>
+        {children}
       </body>
     </html>
   );
