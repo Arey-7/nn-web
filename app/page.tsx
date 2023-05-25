@@ -20,7 +20,7 @@ export default function Page() {
           
         </header>
         <div className="bg-blue-700 w-screen whitespace-nowrap overflow-hidden">
-            <div className="py-4 flex text-6xl text-slate-200 font-mono font-black tracking-widest underline decoration-4 animate-carousel">
+            <div className="py-4 flex text-6xl text-yellow-400 font-mono font-black tracking-widest underline decoration-4 animate-carousel">
             <p className="mx-56">design</p>
             <p className="mx-56">write</p>
             <p className="mx-56">draw</p>
@@ -30,7 +30,7 @@ export default function Page() {
             <p className="mx-56">draw</p>
             <p className="mx-56">design</p>
           </div>
-          <div className="py-4 flex text-6xl text-slate-200 font-mono font-black tracking-widest underline decoration-4 animate-carousel">
+          <div className="py-4 flex text-6xl text-yellow-400 font-mono font-black tracking-widest underline decoration-4 animate-carousel">
             <p className="mx-56">draw</p>
             <p className="mx-56">design</p>
             <p className="mx-56">write</p>
@@ -40,7 +40,7 @@ export default function Page() {
             <p className="mx-56">write</p>
             <p className="mx-56">draw</p>
           </div>
-          <div className="py-4 flex text-6xl text-slate-200 font-mono font-black tracking-widest underline decoration-4 animate-carousel">
+          <div className="py-4 flex text-6xl text-yellow-400 font-mono font-black tracking-widest underline decoration-4 animate-carousel">
             <p className="mx-56">write</p>
             <p className="mx-56">draw</p>
             <p className="mx-56">design</p>
