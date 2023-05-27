@@ -13,6 +13,6 @@ body {
 
 .hero-section {
   background-color: rgba(var(--background-rgb));
-  background-image: url("../public/congruent_outline.png");
-  background-blend-mode: overlay;
+  /* background-image: url("../public/congruent_outline.png");
+  background-blend-mode: overlay; */
 }
