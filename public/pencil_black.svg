@@ -3,27 +3,41 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 800 60" style="enable-background:new 0 0 800 60;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#020202;}
-	.st1{fill:none;stroke:#020202;stroke-width:3;stroke-miterlimit:10;}
-	.st2{fill:none;stroke:#020202;stroke-width:3;stroke-miterlimit:9.9999;}
+	.st0{fill:#020202;stroke:#FFFFFF;stroke-miterlimit:9.9999;}
+	.st1{fill:#FFFFFF;stroke:#020202;stroke-width:3;stroke-miterlimit:10;}
+	.st2{fill:#020202;stroke:#FFFFFF;stroke-miterlimit:10;}
+	.st3{fill:#FFFFFF;stroke:#020202;stroke-width:3;stroke-miterlimit:9.9999;}
+	.st4{clip-path:url(#SVGID_00000139990778067260685480000011935086810897613187_);}
 </style>
-<symbol  id="Black_Pencil" viewBox="-350.8 -28.4 703 56.8">
-	<rect x="-265.7" y="-25.8" class="st0" width="570.1" height="51.6"/>
-	<polygon class="st1" points="349.2,0 304.4,25.8 304.4,-25.8 	"/>
-	<polygon class="st0" points="349.2,0 338.2,6.3 338.2,-6.3 	"/>
-	<path class="st0" d="M-299.2-25.8H-325c-14.3,0-25.8,11.6-25.8,25.8l0,0c0,14.3,11.6,25.8,25.8,25.8h25.8V-25.8z"/>
-	<rect x="-299.2" y="-25.8" class="st2" width="33.5" height="51.6"/>
+<symbol  id="Black_Pencil" viewBox="-352 -28.4 703.5 56.8">
+	<rect x="-266.4" y="-25.8" class="st0" width="570.1" height="51.6"/>
+	<polygon class="st1" points="348.5,0 303.7,25.8 303.7,-25.8 	"/>
+	<polygon class="st0" points="348.5,0 337.5,6.3 337.5,-6.3 	"/>
+	<path class="st2" d="M-299.9-25.8h-25.8c-14.3,0-25.8,11.6-25.8,25.8l0,0c0,14.3,11.6,25.8,25.8,25.8h25.8V-25.8z"/>
+	<rect x="-299.9" y="-25.8" class="st3" width="33.5" height="51.6"/>
 </symbol>
 <g>
-	<defs>
-		<rect id="SVGID_1_" x="47.5" y="1.5" width="705" height="57"/>
-	</defs>
-	<clipPath id="SVGID_00000132055619233750415990000017881788682507700115_">
-		<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
-	</clipPath>
-	<g style="clip-path:url(#SVGID_00000132055619233750415990000017881788682507700115_);">
-		
-			<use xlink:href="#Black_Pencil"  width="703" height="56.8" id="XMLID_00000082354408361370080950000015064734444679579577_" x="-350.8" y="-28.4" transform="matrix(1.0007 0 0 -1.0028 400.0029 30)" style="overflow:visible;"/>
+	<g>
+		<defs>
+			<rect id="SVGID_1_" x="47.5" y="1.5" width="705" height="57"/>
+		</defs>
+		<clipPath id="SVGID_00000138552973357717276320000017240876340390604479_">
+			<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+		</clipPath>
+		<g style="clip-path:url(#SVGID_00000138552973357717276320000017240876340390604479_);">
+			<g>
+				<defs>
+					<rect id="SVGID_00000067227282065880727220000002207980031026300593_" x="49" y="1.5" width="703.5" height="57"/>
+				</defs>
+				<clipPath id="SVGID_00000137090683559522809510000011274929221816473260_">
+					<use xlink:href="#SVGID_00000067227282065880727220000002207980031026300593_"  style="overflow:visible;"/>
+				</clipPath>
+				<g style="clip-path:url(#SVGID_00000137090683559522809510000011274929221816473260_);">
+					
+						<use xlink:href="#Black_Pencil"  width="703.5" height="56.8" id="XMLID_00000082354408361370080950000015064734444679579577_" x="-352" y="-28.4" transform="matrix(1.0007 0 0 -1.0028 400.7062 30)" style="overflow:visible;"/>
+				</g>
+			</g>
+		</g>
 	</g>
 </g>
 </svg>

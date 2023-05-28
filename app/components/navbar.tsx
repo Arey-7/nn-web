@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import NavbarOptions from "./navbar_options";
+import MenuButton from "./menu_button";
 
 export default function Navbar() {
   return (
@@ -16,23 +17,7 @@ export default function Navbar() {
       <div className="uppercase my-auto text-blue-900">
         
         <Link href="./">
-          <div className="hover:space-y-4 focus:animate-spin">
-          <Image
-            src="/pencil_black.svg"
-            alt="Menu button"
-            width={80}
-            height={0}
-            className="mb-1"
-          />
-          <Image
-            src="/pencil_black.svg"
-            alt="Menu button"
-            width={80}
-            height={0}
-            className="mt-1 rotate-180 "
-          />
-          </div>
-          
+          <MenuButton/>
         </Link>
       </div>
     </nav>

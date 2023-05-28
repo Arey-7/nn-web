@@ -2,17 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+@media (prefers-color-scheme: light) {
 :root {
-  --foreground-rgba: 33, 29, 30, 1;
-  --background-rgba: 233, 228, 212, 0.5;
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
 }
+} 
 
-body {
-  color: rgba(var(--foreground-rgba));
-}
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
 
-.hero-section {
-  background-color: rgba(var(--background-rgb));
-  /* background-image: url("../public/congruent_outline.png");
-  background-blend-mode: overlay; */
+
+
+
+body {color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
 }
