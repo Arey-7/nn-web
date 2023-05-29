@@ -1,25 +1,22 @@
 "use client"
 import Image from "next/image";
-import { gsap, GSAPTween } from "gsap";
+import { gsap } from "gsap";
 
 export default function MenuButton() {
 
-  const onEnter = ({currentTarget}) =>{
-    gsap.to(currentTarget,{margin:"auto "})
-  }
   return (
-    <div className="relative w-20 h-20">
+    <div className="space-y-1 hover:space-y-2">
       <Image
         src="pencil_white.svg"
         alt="Pencil Menu Icon"
-        width={80}
+        width={50}
         height={0}
-        className="pencil-t"
+        className="pencil-t space-y-2"
       />
       <Image
         src="pencil_white.svg"
         alt="Pencil Menu Icon"
-        width={80}
+        width={50}
         height={0}
         className="pencil-b rotate-180"
       />

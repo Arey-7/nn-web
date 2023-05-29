@@ -2,6 +2,7 @@ import "./globals.css";
 import { Roboto } from "next/font/google";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
+import ThemeButton from "./components/theme_button";
 
 const roboto = Roboto({
   weight: "500",
@@ -24,9 +25,10 @@ export default function RootLayout({
         <link rel="icon" href="./nn-flag.png" sizes="100" />
       </head>
       <body className={roboto.className}>
-        <Navbar/>
+        <Navbar />
         {/* {children}
         <Footer/> */}
+        <ThemeButton />
       </body>
     </html>
   );
