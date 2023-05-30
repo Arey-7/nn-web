@@ -20,6 +20,9 @@ module.exports = {
       },
       animation:{
         carousel: "carousel 5s linear infinite"
+      },
+      rotate:{
+        "135": "135deg",
       }
     },
   },

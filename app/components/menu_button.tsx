@@ -1,25 +1,34 @@
-"use client"
+"use client";
+import { useState } from "react";
 import Image from "next/image";
-import { gsap } from "gsap";
 
 export default function MenuButton() {
-
+  const [clicked, setClicked] = useState(false);
+  const handleClick = () => {
+    setClicked(!clicked);
+  };
   return (
-    <div className="space-y-1 hover:space-y-2">
+    <div>
+      <div
+      className={clicked ? "relative" : "space-y-2 hover:transition-all hover:space-y-3"}
+      onClick={handleClick}
+    >
       <Image
-        src="pencil_white.svg"
-        alt="Pencil Menu Icon"
+        src="/pencil.svg"
+        alt="Menu Icon"
         width={50}
         height={0}
-        className="pencil-t space-y-2"
+        className={clicked ? "transition-transform rotate-45" : "transition-transform"}
       />
       <Image
-        src="pencil_white.svg"
-        alt="Pencil Menu Icon"
+        src="/pencil.svg"
+        alt="Menu Icon"
         width={50}
         height={0}
-        className="pencil-b rotate-180"
+        className={clicked ? "absolute transition-transform rotate-135 top-0" : "transition-transform rotate-180"}
       />
     </div>
+    </div>
+    
   );
 }
