@@ -3,7 +3,6 @@ import { Roboto } from "next/font/google";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import ThemeButton from "./components/theme_button";
-import NavbarOptions from "./components/navbar_options";
 
 const roboto = Roboto({
   weight: "500",
@@ -20,6 +19,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+
   return (
     <html lang="en">
       <head>
@@ -28,7 +29,6 @@ export default function RootLayout({
       <body className={`${roboto.className} bg-black text-white`}>
         <Navbar />
         {children}
-        div
         <ThemeButton />
         <Footer />
       </body>
