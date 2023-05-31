@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import "./globals.css";
 import { Roboto } from "next/font/google";
 import Navbar from "./components/navbar";
@@ -19,14 +21,17 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
+  // const [light, setLight] = useState(false);
+  // const lightMode = () =>{
+  //   setLight(!light)
+  // };
 
   return (
     <html lang="en">
       <head>
         <link rel="icon" href="./nn-flag.png" sizes="100" />
       </head>
-      <body className={`${roboto.className} bg-black text-white`}>
+      <body className={roboto.className}>
         <Navbar />
         {children}
         <ThemeButton />

@@ -1,10 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSun } from '@fortawesome/free-solid-svg-icons'
+import { faMoon } from "@fortawesome/free-solid-svg-icons";
 
-export default function ThemeButton() {
+export default function ThemeButton(){
+    const classStyle = [];
     return(
-        <div className="fixed bottom-3 right-3 bg-inherit text-white rounded-full w-10 h-10 p-3 hover:invert">
+        <button className="fixed bottom-3 right-3 bg-black text-white flex p-3 rounded-full hover:invert">
             <FontAwesomeIcon icon={faSun}/>
-        </div>
+        
+        </button>
     );
 };
