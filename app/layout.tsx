@@ -32,10 +32,14 @@ export default function RootLayout({
         <link rel="icon" href="./nn-flag.png" sizes="100" />
       </head>
       <body className={roboto.className}>
-        <Navbar />
-        {children}
-        <ThemeButton />
-        <Footer />
+        <div className="min-h-screen">
+          <Navbar />
+          {children}
+          <ThemeButton />
+        </div>
+        <div>
+          <Footer />
+        </div>
       </body>
     </html>
   );

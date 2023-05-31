@@ -12,7 +12,7 @@ export default function Navbar() {
 // setVisibleMenu(!visibleMenu);
 
   return (
-    <div className="sticky top-0">
+    <div className="sticky top-0 h-20">
       <nav className="flex items-center justify-between px-8 py-6">
         <Link href="./">
           <Image
