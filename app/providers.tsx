@@ -10,5 +10,5 @@ type ProvidersProps = {
 };
 
 export function Providers({ children }: ProvidersProps) {
-  return <ThemeProvider attribute="class">{children}</ThemeProvider>;
+  return <ThemeProvider enableSystem={true} attribute="class">{children}</ThemeProvider>;
 }

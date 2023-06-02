@@ -13,13 +13,12 @@ export default function ThemeButton() {
     setMounted(true);
   }, []);
 
-  if (!mounted) {
-    return null;
-  }
+  if (!mounted) return null;
+  const currentTheme = theme === 'system' ? 'system' : theme;
 
   return (
     <div className="fixed bottom-14 right-3 ">
-      {theme === 'dark'?(
+      {currentTheme === 'dark'?(
         <button className="bg-black rounded-full flex p-4 text-sm hover:invert" onClick={() => setTheme("light")}>
         <FontAwesomeIcon icon={faCircleHalfStroke} />
       </button>
