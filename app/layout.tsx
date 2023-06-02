@@ -1,7 +1,6 @@
-"use client";
-import { useState } from "react";
 import "./globals.css";
 import { Roboto } from "next/font/google";
+import { Providers } from "./providers";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import ThemeButton from "./components/theme_button";
@@ -21,25 +20,23 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // const [light, setLight] = useState(false);
-  // const lightMode = () =>{
-  //   setLight(!light)
-  // };
-
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="./nn-flag.png" sizes="100" />
+        <title>Noah's Navy Communications</title>
       </head>
       <body className={roboto.className}>
-        <div className="min-h-screen">
-          <Navbar />
-          {children}
-          <ThemeButton />
-        </div>
-        <div>
-          <Footer />
-        </div>
+        <Providers>
+          <div className="min-h-screen">
+            <Navbar />
+            {children}
+            <ThemeButton />
+          </div>
+          <div>
+            <Footer />
+          </div>
+        </Providers>
       </body>
     </html>
   );
