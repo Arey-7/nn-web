@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { useTheme } from "next-themes";
 
 
 export default function MenuButton() {
@@ -10,18 +9,6 @@ export default function MenuButton() {
   const handleClick = () => {
     setClicked(!clicked);
   };
-
-  const { theme } = useTheme();
-  const src = "/pencil.svg";
-  let classname;
-  switch (theme) {
-    case "light":
-      classname = "invert";
-      break;
-    case "dark":
-      classname = "";
-      break;
-  }
 
   return (
     <button
@@ -37,7 +24,7 @@ export default function MenuButton() {
         height={0}
         priority={true}
         className={
-          clicked ? `${classname} transition-transform rotate-45 ` : `${classname} transition-transform`
+          clicked ? "transition-transform rotate-45 dark:invert" : "transition-transform dark:invert"
         }
       />
       <Image
@@ -48,8 +35,8 @@ export default function MenuButton() {
         priority={true}
         className={
           clicked
-            ? `${classname} absolute transition-transform rotate-135 top-0`
-            : `${classname} transition-transform rotate-180`
+            ? "absolute transition-transform rotate-135 top-0 dark:invert"
+            : "transition-transform rotate-180 dark:invert"
         }
       />
     </button>
