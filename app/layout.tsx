@@ -1,8 +1,8 @@
 import "./globals.css";
 import { Roboto } from "next/font/google";
 import { Providers } from "./providers";
-import Navbar from "./components/navbar";
-import Footer from "./components/footer";
+import Navbar from "./sections/navbar";
+import Footer from "./sections/footer";
 import ThemeButton from "./components/theme_button";
 
 const roboto = Roboto({
@@ -28,13 +28,13 @@ export default function RootLayout({
       </head>
       <body className={roboto.className}>
         <Providers>
-          <div className="min-h-screen">
+          <div className="min-h-screen w-full">
             <Navbar />
             {children}
             <ThemeButton />
           </div>
           <div>
-            <Footer />
+          <Footer />
           </div>
         </Providers>
       </body>

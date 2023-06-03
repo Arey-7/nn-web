@@ -2,14 +2,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import MenuButton from "./menu_button";
-import NavbarOptions from "./navbar_options";
+import MenuButton from "../components/menu_button";
+import NavbarOptions from "../components/navbar_options";
 
 
 export default function Navbar() {
 
   return (
-    <div className="sticky top-0 h-20">
+    <div className="sticky top-0 w-full">
       <nav className="flex items-center justify-between px-8 py-6">
         <Link href="./">
           <Image

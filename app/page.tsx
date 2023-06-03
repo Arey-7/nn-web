@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Gallery from "./sections/gallery";
 
 // `app/page.tsx` is the UI for the `/` URL
 export default function Page() {
@@ -33,6 +34,7 @@ export default function Page() {
         Bet the only words you read were "Lorem ipsum" then you skipped to this
         section
       </p>
+      <Gallery/>
     </main>
   );
 }
