@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.menu-button{
+    --button-color: black;
+    overflow: hidden;
+}
+
+.line{
+    transition: 1s;
+    stroke-dasharray: 60 30 60 300;
+}
+.menu-button .hamburger{
+    transition: 1s;
+}
+
+
+.menu-button[aria-expanded="true"] .hamburger{
+    translate: 4px -6px;
+    rotate: .125turn;
+}
+
+.menu-button[aria-expanded="true"] .line{
+    stroke-dasharray: 60 165 60 300;
+    stroke-dashoffset: -90;
+}

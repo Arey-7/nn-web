@@ -8,7 +8,7 @@ export default function Gallery(){
             alt=""
             width={500}
             height={0}
-            className="my-5 grayscale"/>
+            className="my-5 grayscale hover:grayscale-0"/>
             <Image src="/gallery/dotted-lion.jpg"
             alt=""
             width={500}
