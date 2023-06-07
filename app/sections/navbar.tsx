@@ -20,13 +20,7 @@ export default function Navbar() {
       gsap.to(menu.current, { x: 0, duration: 0.8, opacity: 1 });
     }
   }, [clicked]);
-
-  // Menu Links
-  const options = [
-    { name: "Projects", link: "/projects" },
-    { name: "About", link: "/about" },
-    { name: "Contacts", link: "/contacts" },
-  ];
+  
 
   return (
     <div className="fixed top-0 w-full">
