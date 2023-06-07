@@ -2,9 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+body{
+    overflow-x: hidden;
+}
+
 .menu-button{
     --button-color: black;
     overflow: hidden;
+    transition: 0.6s;
 }
 
 .line{
@@ -13,6 +18,10 @@
 }
 .menu-button .hamburger{
     transition: 1s;
+}
+
+.menu-button[aria-expanded="false"]:hover{
+    scale: 1 1.1;
 }
 
 

@@ -17,7 +17,7 @@ export default function ThemeButton() {
   const currentTheme = theme === 'system' ? 'system' : theme;
 
   return (
-    <div className="fixed bottom-14 right-3 ">
+    <div className="fixed bottom-14 right-8">
       {currentTheme === 'dark'?(
         <button className="bg-black rounded-full flex p-4 text-sm hover:invert" onClick={() => setTheme("light")}>
         <FontAwesomeIcon icon={faCircleHalfStroke} />

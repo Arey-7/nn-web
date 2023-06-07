@@ -24,17 +24,18 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="./nn-flag.png" sizes="100" />
-        <title>Noah's Navy Communications</title>
       </head>
       <body className={roboto.className}>
         <Providers>
-          <div className="min-h-screen w-full">
-            <Navbar />
-            {children}
+          <div className="min-h-screen">
+            <div className="">
+              <Navbar />
+            </div>
+            <div className="mx-auto w-3/4 pt-24">{children}</div>
             <ThemeButton />
           </div>
           <div>
-          <Footer />
+            <Footer />
           </div>
         </Providers>
       </body>

@@ -4,7 +4,7 @@ import Gallery from "./sections/gallery";
 // `app/page.tsx` is the UI for the `/` URL
 export default function Page() {
   return (
-    <main className="text-5xl mx-auto w-10/12 p-4">
+    <main className="text-5xl">
       <p className="text-3xl text-orange-400 mb-4">
         We have a way with words as you can see:
       </p>
@@ -34,7 +34,7 @@ export default function Page() {
         Bet the only words you read were "Lorem ipsum" then you skipped to this
         section
       </p>
-      <Gallery/>
+      <Gallery />
     </main>
   );
 }
