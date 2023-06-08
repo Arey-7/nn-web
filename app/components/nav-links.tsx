@@ -13,9 +13,7 @@ export default function NavLinks() {
       className="bg-black text-gray-500  absolute -right-1/4 h-screen uppercase dark:invert w-1/5"
     >
       {options.map((option, index) => (
-        <div key={index} className="p-6 mx-auto hover:text-white">
-          <Link href={option.link}>{option.name}</Link>
-        </div>
+          <Link href={option.link} key={index} className="block p-6 text-center hover:text-white">{option.name}</Link>
       ))}
     </div>
   );

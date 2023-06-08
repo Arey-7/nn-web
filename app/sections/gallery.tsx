@@ -1,30 +1,80 @@
 import Image from "next/image";
 
-export default function Gallery(){
-    return(
-        <div>Gallery Section
-            <div className="flex gap-2 overflow-hidden">
-            <Image src="/gallery/dotted-lion.jpg"
-            alt=""
-            width={500}
-            height={0}
-            className="my-5 grayscale hover:grayscale-0"/>
-            <Image src="/gallery/dotted-lion.jpg"
-            alt=""
-            width={500}
-            height={0}
-            className="my-5"/>
-            <Image src="/gallery/dotted-lion.jpg"
-            alt=""
-            width={500}
-            height={0}
-            className="my-5"/>
-            <Image src="/gallery/dotted-lion.jpg"
-            alt=""
-            width={500}
-            height={0}
-            className="my-5"/>
-            </div>
-        </div>
-    )
+export default function Gallery() {
+  const artpieces = [
+    {
+      src: "/gallery/dotted-lion.jpg",
+      alt: "Lion Artpiece",
+      className: "w-72 h-48 rounded-md border-8 border-amber-900 object-cover",
+    },
+    {
+      src: "/gallery/dotted-lion.jpg",
+      alt: "Lion Artpiece",
+      className: "w-72 h-48 rounded-md border-8 border-amber-900 object-cover",
+    },
+    {
+      src: "/gallery/dotted-lion.jpg",
+      alt: "Lion Artpiece",
+      className: "w-72 h-48 rounded-md border-8 border-amber-900 object-cover",
+    },
+    {
+      src: "/gallery/dotted-lion.jpg",
+      alt: "Lion Artpiece",
+      className: "w-72 h-48 rounded-md border-8 border-amber-900 object-cover",
+    },
+    {
+      src: "/gallery/dotted-lion.jpg",
+      alt: "Lion Artpiece",
+      className: "w-72 h-48 rounded-md border-8 border-amber-900 object-cover",
+    },
+    {
+      src: "/gallery/dotted-lion.jpg",
+      alt: "Lion Artpiece",
+      className: "w-72 h-48 rounded-md border-8 border-amber-900 object-cover",
+    },
+    {
+      src: "/gallery/dotted-lion.jpg",
+      alt: "Lion Artpiece",
+      className: "w-72 h-48 rounded-md border-8 border-amber-900 object-cover",
+    },
+    {
+      src: "/gallery/dotted-lion.jpg",
+      alt: "Lion Artpiece",
+      className: "w-72 h-48 rounded-md border-8 border-amber-900 object-cover",
+    },
+    {
+      src: "/gallery/dotted-lion.jpg",
+      alt: "Lion Artpiece",
+      className: "w-72 h-48 rounded-md border-8 border-amber-900 object-cover",
+    },
+    {
+      src: "/gallery/dotted-lion.jpg",
+      alt: "Lion Artpiece",
+      className: "w-72 h-48 rounded-md border-8 border-amber-900 object-cover",
+    },
+    {
+      src: "/gallery/dotted-lion.jpg",
+      alt: "Lion Artpiece",
+      className: "w-72 h-48 rounded-md border-8 border-amber-900 object-cover",
+    }
+  ];
+
+  
+  return (
+    <div>
+      Art Gallery
+      <div className="flex gap-2 overflow-hidden">
+        {artpieces.map((artpiece, index) => (
+          <Image
+            key={index}
+            src={artpiece.src}
+            alt={artpiece.alt}
+            width={3}
+            height={2}
+            className={artpiece.className}
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
