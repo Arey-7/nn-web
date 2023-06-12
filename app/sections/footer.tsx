@@ -11,7 +11,7 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-400">
+    <footer className="bg-stone-700">
       <div className="mx-auto grid grid-flow-col p-5">
         <ul className="">
           <li>

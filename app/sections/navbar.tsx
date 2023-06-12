@@ -23,8 +23,8 @@ export default function Navbar() {
   
 
   return (
-    <div className="fixed top-0 w-full">
-      <nav className="flex items-center justify-between px-6 py-2">
+    <div className="fixed top-0 w-full z-10">
+      <nav className="flex items-center justify-between px-6 py-2 bg-black dark:invert">
         <Link href="./">
           <Image
             src="/nn_logo.svg"
@@ -32,11 +32,11 @@ export default function Navbar() {
             width={150}
             height={0}
             priority={true}
-            className="logo dark:invert"
+            className="invert"
           />
         </Link>
         <button
-          className="menu-button dark:invert"
+          className="menu-button invert"
           aria-controls="primary-navigation"
           aria-expanded={clicked ? "true" : "false"}
           onClick={handleClick}

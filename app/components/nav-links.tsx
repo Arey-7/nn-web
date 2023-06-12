@@ -10,7 +10,7 @@ export default function NavLinks() {
 
   return (
     <div
-      className="bg-black text-gray-500  absolute -right-1/4 h-screen uppercase dark:invert w-1/5"
+      className="bg-black text-gray-500  absolute -right-1/4 h-screen uppercase dark:invert w-1/5 divide-y"
     >
       {options.map((option, index) => (
           <Link href={option.link} key={index} className="block p-6 text-center hover:text-white">{option.name}</Link>

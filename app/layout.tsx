@@ -3,7 +3,7 @@ import { Roboto } from "next/font/google";
 import { Providers } from "./providers";
 import Navbar from "./sections/navbar";
 import Footer from "./sections/footer";
-import ThemeButton from "./components/theme_button";
+import ThemeButton from "./components/theme-button";
 
 const roboto = Roboto({
   weight: "500",
@@ -31,7 +31,7 @@ export default function RootLayout({
             <div className="">
               <Navbar />
             </div>
-            <div className="mx-auto w-3/4 pt-24">{children}</div>
+            <div className="pt-24">{children}</div>
             <ThemeButton />
           </div>
           <div>
