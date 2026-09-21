@@ -5,7 +5,7 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CampaignGallery from "../components/campaign-gallery";
-import { FEATURED, type Campaign } from "../content/work";
+import { FEATURED, accentVars, type Campaign } from "../content/work";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -86,7 +86,7 @@ export default function FeaturedWork() {
                     }`}
                   >
                     <div className="flex items-center gap-4">
-                      <span className="text-label" style={{ color: c.accent }}>
+                      <span className="text-label ca-text" style={accentVars(c)}>
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <span className="h-px w-12 bg-line-strong" />
@@ -113,8 +113,8 @@ export default function FeaturedWork() {
                       className="group mt-9 inline-flex items-center gap-3 text-label text-ink"
                     >
                       <span
-                        className="h-px w-10 transition-all duration-500 ease-out-expo group-hover:w-16"
-                        style={{ backgroundColor: c.accent }}
+                        className="ca-bg h-px w-10 transition-all duration-500 ease-out-expo group-hover:w-16"
+                        style={accentVars(c)}
                       />
                       See all {c.print!.length} executions
                     </button>
@@ -162,7 +162,7 @@ export default function FeaturedWork() {
             return (
               <li key={c.slug} className="py-14">
                 <div className="flex items-center gap-4">
-                  <span className="text-label" style={{ color: c.accent }}>
+                  <span className="text-label ca-text" style={accentVars(c)}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="text-label text-ink-faint">

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useOverlay } from "../lib/use-overlay";
-import type { Campaign } from "../content/work";
+import { accentVars, type Campaign } from "../content/work";
 
 type Props = {
   campaign: Campaign | null;
@@ -27,7 +27,7 @@ export default function CampaignGallery({ campaign, onClose }: Props) {
     >
       <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-paper-sunk/90 px-6 py-5 backdrop-blur-md md:px-10">
         <div className="min-w-0">
-          <p className="text-label truncate" style={{ color: campaign.accent }}>
+          <p className="text-label ca-text truncate" style={accentVars(campaign)}>
             {campaign.client}
           </p>
           <p className="mt-1 truncate text-lg text-ink">

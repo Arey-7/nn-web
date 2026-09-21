@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { CAMPAIGNS, bySlug } from "../../content/work";
+import { CAMPAIGNS, accentVars, bySlug } from "../../content/work";
 import CampaignMedia from "./campaign-media";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -42,7 +42,7 @@ export default async function CampaignPage({ params }: Params) {
         </Link>
 
         <div className="mt-10 flex flex-wrap items-center gap-4">
-          <span className="text-label" style={{ color: campaign.accent }}>
+          <span className="text-label ca-text" style={accentVars(campaign)}>
             {campaign.client}
           </span>
           <span className="h-px w-12 bg-line-strong" />

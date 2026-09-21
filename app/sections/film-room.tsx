@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Lightbox from "../components/lightbox";
-import { FILMS, type Campaign, type FilmPiece } from "../content/work";
+import { FILMS, accentVars, type Campaign, type FilmPiece } from "../content/work";
 
 type Entry = FilmPiece & { campaign: Campaign };
 
@@ -92,8 +92,8 @@ function FilmCard({ entry, onOpen }: { entry: Entry; onOpen: () => void }) {
           </p>
         </div>
         <span
-          className="text-label shrink-0"
-          style={{ color: entry.campaign.accent }}
+          className="text-label ca-text shrink-0"
+          style={accentVars(entry.campaign)}
         >
           {entry.campaign.discipline}
         </span>

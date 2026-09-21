@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { RADIO, type Campaign, type RadioPiece } from "../content/work";
+import { RADIO, accentVars, type Campaign, type RadioPiece } from "../content/work";
 
 type Spot = RadioPiece & { campaign: Campaign };
 
@@ -167,13 +167,12 @@ export default function RadioRoom() {
                     className="group flex w-full items-center gap-6 py-6 text-left"
                   >
                     <span
-                      className="grid h-12 w-12 shrink-0 place-items-center rounded-full border transition-colors duration-300"
-                      style={{
-                        borderColor: isActive
-                          ? spot.campaign.accent
-                          : "var(--line-strong)",
-                        color: isActive ? spot.campaign.accent : "var(--ink)",
-                      }}
+                      className={`grid h-12 w-12 shrink-0 place-items-center rounded-full border transition-colors duration-300 ${
+                        isActive
+                          ? "ca-text ca-border"
+                          : "border-line-strong text-ink"
+                      }`}
+                      style={accentVars(spot.campaign)}
                     >
                       {isActive ? (
                         <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">

@@ -135,6 +135,29 @@
     text-transform: uppercase;
   }
 
+  /* Campaign accents. Each campaign supplies --ca (dark theme) and --ca-light
+     (light theme) via the accentVars() helper; the theme picks which applies.
+     Both variants are checked to WCAG AA against their own background. */
+  .ca-text {
+    color: var(--ca);
+  }
+  .ca-bg {
+    background-color: var(--ca);
+  }
+  .ca-border {
+    border-color: var(--ca);
+  }
+
+  html:not(.dark) .ca-text {
+    color: var(--ca-light);
+  }
+  html:not(.dark) .ca-bg {
+    background-color: var(--ca-light);
+  }
+  html:not(.dark) .ca-border {
+    border-color: var(--ca-light);
+  }
+
   .edge-fade-y {
     mask-image: linear-gradient(
       to bottom,

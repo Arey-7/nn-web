@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   CAMPAIGNS,
+  accentVars,
   coverOf,
   pieceCount,
   type Campaign,
@@ -56,8 +57,8 @@ function Card({ campaign }: { campaign: Campaign }) {
           // Radio: nothing to show, so the headline becomes the artwork.
           <div className="flex aspect-4/5 items-center p-8">
             <p
-              className="text-display text-[clamp(1.4rem,2.4vw,2.2rem)]"
-              style={{ color: campaign.accent }}
+              className="ca-text text-display text-[clamp(1.4rem,2.4vw,2.2rem)]"
+              style={accentVars(campaign)}
             >
               {campaign.headline}
             </p>
@@ -65,8 +66,8 @@ function Card({ campaign }: { campaign: Campaign }) {
         )}
 
         <span
-          className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 transition-transform duration-700 ease-out-expo group-hover:scale-x-100"
-          style={{ backgroundColor: campaign.accent }}
+          className="ca-bg absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 transition-transform duration-700 ease-out-expo group-hover:scale-x-100"
+          style={accentVars(campaign)}
         />
       </div>
 

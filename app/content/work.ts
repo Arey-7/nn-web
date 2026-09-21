@@ -54,7 +54,10 @@ export type Campaign = {
   medium: Medium;
   discipline: string;
   blurb: string;
+  /** Legible on the dark theme. */
   accent: string;
+  /** Legible on the light theme. Both clear WCAG AA against their background. */
+  accentLight: string;
   featured?: boolean;
   print?: PrintPiece[];
   films?: FilmPiece[];
@@ -107,6 +110,7 @@ export const CAMPAIGNS: Campaign[] = [
     medium: "print",
     discipline: "Conservation",
     accent: "#c9d92b",
+    accentLight: "#676f16",
     featured: true,
     blurb:
       "Three long-copy pages that refuse to let the reader off. Each one starts on the reader's own body — your teeth, your hands, your hair — and walks it, sentence by sentence, into the animal's. They all land on the same verdict: poaching is foreign. It's unAfrican.",
@@ -142,6 +146,7 @@ export const CAMPAIGNS: Campaign[] = [
     medium: "print",
     discipline: "Public health",
     accent: "#29abe2",
+    accentLight: "#1b7195",
     featured: true,
     blurb:
       "Two faces, one slash, and a question that puts the reader on one side of it. The campaign moves the shame off the ill and onto the people doing the naming — then hands over a number to dial.",
@@ -189,6 +194,7 @@ export const CAMPAIGNS: Campaign[] = [
     medium: "print",
     discipline: "Public sector",
     accent: "#1ca5d8",
+    accentLight: "#137295",
     featured: true,
     blurb:
       "A tax amnesty written in the cadence of scripture and set like a summons — seven all-type layouts, white on black, no pictures at all. 'Woe to thee if thou will not have declared…' One execution simply puts the excuse in the defendant's mouth: I didn't know about the deadline, my Lords.",
@@ -223,6 +229,7 @@ export const CAMPAIGNS: Campaign[] = [
     medium: "print",
     discipline: "Human rights",
     accent: "#c9a227",
+    accentLight: "#7f6619",
     featured: true,
     blurb:
       "A full page made to look like evidence: aged newsprint, dense columns of the record, a gallows standing where the masthead should be. The line runs down the gutter in longhand, as if someone wrote it in the margin of a paper they could not put down.",
@@ -243,7 +250,8 @@ export const CAMPAIGNS: Campaign[] = [
     year: "2019",
     medium: "print",
     discipline: "Media",
-    accent: "#0b63b0",
+    accent: "#3c82c0",
+    accentLight: "#0b63b0",
     featured: true,
     blurb:
       "Sixty years of a newspaper, argued through the days it showed up for. Each page pairs one photograph from the archive with the date it ran and the reporting around it — Kenyatta's death, Besigye sat down in the road, Wangari Maathai, Saba Saba. The claim is not that the Nation was good. It's that it was there.",
@@ -290,6 +298,7 @@ export const CAMPAIGNS: Campaign[] = [
     medium: "print",
     discipline: "Automotive",
     accent: "#e2622a",
+    accentLight: "#ae4b20",
     featured: true,
     blurb:
       "Peugeot came back to Kenyan assembly at Thika, so the ad put the homecoming in the picture: the 504 that owned these roads from 1968 parked alongside the 3008 that inherits them. Two number plates, fifty-one years, one bloodline.",
@@ -315,7 +324,8 @@ export const CAMPAIGNS: Campaign[] = [
     headline: "Every balance sheet has someone standing behind it.",
     medium: "film",
     discipline: "Banking",
-    accent: "#0033a1",
+    accent: "#5c7cc3",
+    accentLight: "#0033a1",
     featured: true,
     blurb:
       "A documentary series for the bank's enterprise arm, shot on the customers' own ground — a bakery, a freight yard, an engineering firm laying road, a farm, a pathology lab. Nobody reads a proposition to camera. The businesses just get on with it and the bank stands where it belongs: slightly off to one side.",
@@ -335,6 +345,7 @@ export const CAMPAIGNS: Campaign[] = [
     medium: "film",
     discipline: "Media",
     accent: "#e8927c",
+    accentLight: "#925c4e",
     blurb:
       "The film opens on a pencil working over a sheet of paper, drawing a name that was crossed out long before the world learned the other one. An argument for reading the business pages before the rest of the country catches up.",
     films: [f("bd-next-big-thing", "The Next Big Thing", 35)],
@@ -347,6 +358,7 @@ export const CAMPAIGNS: Campaign[] = [
     medium: "film",
     discipline: "FMCG",
     accent: "#f36f21",
+    accentLight: "#ab4e17",
     blurb:
       "A sixty-second television commercial for the most ordinary object in the room, built around the moment a person bends over a page and commits.",
     films: [f("bic-without-newspaper", "BIC 60″", 63)],
@@ -359,6 +371,7 @@ export const CAMPAIGNS: Campaign[] = [
     medium: "film",
     discipline: "FMCG",
     accent: "#f28c00",
+    accentLight: "#9b5a00",
     blurb:
       "A figure assembled out of glowing particles moves through the dark and resolves, for a moment, into a person — the drink's promise rendered as light rather than claimed as a line.",
     films: [f("lucozade-kenya", "Lucozade Kenya", 30)],
@@ -370,7 +383,8 @@ export const CAMPAIGNS: Campaign[] = [
     headline: "The smallest thing in the room is the dangerous one.",
     medium: "film",
     discipline: "Public health",
-    accent: "#d7282f",
+    accent: "#dd484e",
+    accentLight: "#cb262c",
     blurb:
       "Public-health film shot inside the ordinary Kenyan home where the risk actually lives — the doorway, the painted wall, the room everyone sleeps in.",
     films: [f("psi-mbu-64", "Mbu", 64)],
@@ -382,7 +396,8 @@ export const CAMPAIGNS: Campaign[] = [
     headline: "The region, read from the back seat.",
     medium: "film",
     discipline: "Media",
-    accent: "#1b6ca8",
+    accent: "#3e83b5",
+    accentLight: "#1b6ca8",
     blurb:
       "A monochrome city, one yellow taxi sign holding the only colour in frame, and a newspaper that crosses borders for a living.",
     films: [f("tea-taxi", "Taxi", 63)],
@@ -395,7 +410,8 @@ export const CAMPAIGNS: Campaign[] = [
     headline: "Two cities, one call.",
     medium: "radio",
     discipline: "Telecoms",
-    accent: "#e4032e",
+    accent: "#e93457",
+    accentLight: "#d4032b",
     featured: true,
     blurb:
       "A pair of radio spots for the network that became Airtel, each one carrying a Kenyan listener somewhere they have never been and getting them home inside thirty seconds.",
@@ -411,7 +427,8 @@ export const CAMPAIGNS: Campaign[] = [
     headline: "Three problems, one answer.",
     medium: "radio",
     discipline: "Pharmaceutical",
-    accent: "#0b5fab",
+    accent: "#4182bd",
+    accentLight: "#0b5fab",
     blurb: "Thirty seconds of radio built to be remembered at the counter.",
     radio: [r("hedex-3in1", "3 in 1 Mix", 30)],
   },
@@ -423,6 +440,7 @@ export const CAMPAIGNS: Campaign[] = [
     medium: "radio",
     discipline: "Public sector",
     accent: "#1ca5d8",
+    accentLight: "#137295",
     blurb:
       "Radio for the revenue authority that reaches for a name the whole country already has an opinion about, and lets the listener finish the thought.",
     radio: [r("kra-pattni", "Pattni", 53)],
@@ -434,7 +452,8 @@ export const CAMPAIGNS: Campaign[] = [
     headline: "Some things carry further than you think.",
     medium: "radio",
     discipline: "Public sector",
-    accent: "#006b3f",
+    accent: "#388c69",
+    accentLight: "#006b3f",
     blurb: "A radio spot for the education ministry, carried on sound alone.",
     radio: [r("moe-wind", "Wind", 36)],
   },
@@ -445,6 +464,14 @@ export const FILMS = CAMPAIGNS.filter((c) => c.medium === "film");
 export const RADIO = CAMPAIGNS.filter((c) => c.medium === "radio");
 
 export const bySlug = (slug: string) => CAMPAIGNS.find((c) => c.slug === slug);
+
+/**
+ * Feeds both accent variants to CSS so the theme picks one. An inline style
+ * can't respond to the theme class, but a custom property can.
+ * Pair with the `ca-text` / `ca-bg` / `ca-border` utilities.
+ */
+export const accentVars = (c: Campaign) =>
+  ({ "--ca": c.accent, "--ca-light": c.accentLight }) as React.CSSProperties;
 
 /** Radio has no artwork, so it falls through to a typographic card. */
 export const coverOf = (c: Campaign) =>
