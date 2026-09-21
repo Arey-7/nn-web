@@ -1,20 +1,31 @@
-import Image from "next/image";
+import type { Metadata } from "next";
+import PageHeader from "../components/page-header";
+import WorkIndex from "./work-index";
 
-export default function Projects() {
-    return (
-    <>
-    <h1>Here are Our Projects!</h1>
-    <Image
-              src="/pencil.svg"
-              alt="Noah's Navy Logo"
-              width={500}
-              height={0}
-            />
-    <h2 className="text-2xl p-56">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni delectus consectetur numquam? Alias, quae consequatur tempora similique nobis sunt obcaecati numquam temporibus pariatur aliquam neque nam asperiores ipsa voluptatum illum!
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum amet saepe eligendi, ipsam libero autem aut magnam commodi, quos veniam reiciendis officiis praesentium cumque itaque optio impedit, sequi repellat delectus.
-    </h2>
-    </>
-    
-    );
-  }
+export const metadata: Metadata = {
+  title: "Work",
+  description:
+    "Press, film and radio for the African Wildlife Foundation, the Kenya Human Rights Commission, the Kenya Revenue Authority, Nation Media Group, Peugeot, CfC Stanbic and others.",
+};
+
+export default function ProjectsPage() {
+  return (
+    <div className="pb-32">
+      <PageHeader
+        eyebrow="Work"
+        title={
+          <>
+            Thirty years
+            <br />
+            of <span className="italic text-accent">arguments</span>.
+          </>
+        }
+        lede="Every campaign we can still put our hands on — the press pages, the television, and the radio nobody keeps."
+      />
+
+      <div className="mx-auto max-w-[1600px] px-6 md:px-10">
+        <WorkIndex />
+      </div>
+    </div>
+  );
+}

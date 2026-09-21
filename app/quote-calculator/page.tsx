@@ -1,9 +1,25 @@
 "use client";
-// Import the useFormik hook from the formik library
+
 import { useFormik } from "formik";
-// Define a functional component Data
+import PageHeader from "../components/page-header";
+
+const FIELDS = [
+  { name: "reamCost", label: "Cost of a ream of paper" },
+  { name: "reamNum", label: "Number of reams" },
+  { name: "transport", label: "Transport" },
+  { name: "filmCost", label: "Cost of film" },
+  { name: "plateCost", label: "Cost of a plate" },
+  { name: "plateNum", label: "Number of plates" },
+  { name: "printCost", label: "Printing" },
+  { name: "trimCost", label: "Trimming / cutting" },
+  { name: "packCost", label: "Packing" },
+  { name: "misc", label: "Miscellaneous" },
+] as const;
+
+const money = (n: number) =>
+  n.toLocaleString("en-KE", { maximumFractionDigits: 0 });
+
 export default function QuoteCalculator() {
-  // Initialize the formik object with initial values and an empty submit function
   const formik = useFormik({
     initialValues: {
       reamCost: 0,
@@ -17,10 +33,9 @@ export default function QuoteCalculator() {
       packCost: 0,
       misc: 0,
     },
-    onSubmit: (values) => {},
+    onSubmit: () => {},
   });
 
-  // Calculate the total cost by multiplying the input values with appropriate factors
   const total =
     formik.values.reamCost * formik.values.reamNum +
     formik.values.transport * 1 +
@@ -31,202 +46,82 @@ export default function QuoteCalculator() {
     formik.values.packCost * formik.values.reamNum +
     formik.values.misc;
 
-  // Calculate the quote by adding a profit margin and rounding up to the nearest multiple of 200
   const quote = Math.ceil((total * 1.35) / 200) * 200;
-  // Calculate the tax by multiplying the quote with a tax rate
   const tax = Math.round(0.16 * quote);
-  // Calculate the profit by subtracting the total cost from the quote
   const profit = quote - total;
-  // Calculate the percentage profit by dividing the profit by the total cost
   const percProf = (Math.round((profit / total) * 10000) / 100).toFixed(2);
 
-  // Return a JSX div element with a form inside
+  const results = [
+    { label: "Total cost", value: money(total) },
+    { label: "Amount to be quoted", value: money(quote), lead: true },
+    { label: "16% VAT", value: money(tax) },
+    { label: "Profit", value: money(profit) },
+    // total starts at 0, so the percentage is NaN until something is entered.
+    { label: "Percentage profit", value: total > 0 ? `${percProf}%` : "—" },
+    { label: "Tithe", value: money(0.12 * profit) },
+  ];
+
   return (
-    <div className="m-4 flex gap-4">
-      <form className="p-4 w-2/3 bg-slate-400 bg-light-blue grid grid-cols-4 gap-3 rounded-lg">
-        <div>
-          <label htmlFor="reamCost" className=" block mb-5 uppercase text-xs">
-            Cost of a ream of paper
-          </label>
-          <input
-            type="number"
-            name="reamCost"
-            placeholder="0"
-            min={1}
-            onChange={formik.handleChange}
-            value={formik.values.reamCost}
-            className="bg-transparent text-black  text-2xl placeholder-black focus: focus:border-l-4 border-gray-700 border-gray w-28 rounded-md"
-          />
-        </div>
+    <div className="pb-32">
+      <PageHeader
+        eyebrow="Internal tool"
+        title="Print quote calculator"
+        lede="Working costs for a print job, with the standard 35% margin rounded up to the nearest 200. Figures update as you type."
+      />
 
-        <div>
-          <label htmlFor="reamNum" className=" block mb-5 uppercase text-xs">
-            Number of Reams
-          </label>
-          <input
-            type="number"
-            placeholder="0"
-            min={1}
-            name="reamNum"
-            onChange={formik.handleChange}
-            value={formik.values.reamNum}
-            className="bg-transparent text-black  text-2xl placeholder-black focus:border-l-4 border-gray-700 border-gray w-28 rounded-md"
-          />
-        </div>
+      <div className="mx-auto mt-14 grid max-w-[1600px] gap-12 px-6 md:px-10 lg:grid-cols-12">
+        <form className="lg:col-span-7" onSubmit={(e) => e.preventDefault()}>
+          <fieldset className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
+            <legend className="text-label mb-7 text-ink-faint">Inputs</legend>
+            {FIELDS.map((field) => (
+              <div key={field.name}>
+                <label
+                  htmlFor={field.name}
+                  className="text-label block text-ink-muted"
+                >
+                  {field.label}
+                </label>
+                <input
+                  id={field.name}
+                  name={field.name}
+                  type="number"
+                  min={0}
+                  inputMode="numeric"
+                  placeholder="0"
+                  onChange={formik.handleChange}
+                  value={formik.values[field.name]}
+                  className="mt-3 w-full border-b border-line-strong bg-transparent pb-2 text-2xl text-ink tabular-nums transition-colors focus:border-accent focus:outline-none"
+                />
+              </div>
+            ))}
+          </fieldset>
+        </form>
 
-        <div>
-          <label htmlFor="transport" className=" block mb-5 uppercase text-xs">
-            Transport Cost
-          </label>
-          <input
-            type="number"
-            placeholder="0"
-            min={1}
-            name="transport"
-            onChange={formik.handleChange}
-            value={formik.values.transport}
-            className="bg-transparent text-black  text-2xl placeholder-black focus:border-l-4 border-gray-700 border-gray w-28 rounded-md"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="filmCost" className=" block mb-5 uppercase text-xs">
-            Cost of Film
-          </label>
-          <input
-            type="number"
-            placeholder="0"
-            min={1}
-            name="filmCost"
-            onChange={formik.handleChange}
-            value={formik.values.filmCost}
-            className="bg-transparent text-black  text-2xl placeholder-black focus:border-l-4 border-gray-700 border-gray w-28 rounded-md"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="plateCost" className=" block mb-5 uppercase text-xs">
-            Cost of Plate
-          </label>
-          <input
-            type="number"
-            placeholder="0"
-            min={1}
-            name="plateCost"
-            onChange={formik.handleChange}
-            value={formik.values.plateCost}
-            className="bg-transparent text-black  text-2xl placeholder-black focus:border-l-4 border-gray-700 border-gray w-28 rounded-md"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="plateNum" className=" block mb-5 uppercase text-xs">
-            Number of Plates
-          </label>
-          <input
-            type="number"
-            placeholder="0"
-            min={1}
-            name="plateNum"
-            onChange={formik.handleChange}
-            value={formik.values.plateNum}
-            className="bg-transparent text-black  text-2xl placeholder-black focus:border-l-4 border-gray-700 border-gray w-28 rounded-md"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="printCost" className=" block mb-5 uppercase text-xs">
-            Printing
-          </label>
-          <input
-            type="number"
-            placeholder="0"
-            min={1}
-            name="printCost"
-            onChange={formik.handleChange}
-            value={formik.values.printCost}
-            className="bg-transparent text-black  text-2xl placeholder-black focus:border-l-4 border-gray-700 border-gray w-28 rounded-md"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="trimCost" className=" block mb-5 uppercase text-xs">
-            Trimming/ Cutting
-          </label>
-          <input
-            type="number"
-            placeholder="0"
-            min={1}
-            name="trimCost"
-            onChange={formik.handleChange}
-            value={formik.values.trimCost}
-            className="bg-transparent text-black  text-2xl placeholder-black focus:border-l-4 border-gray-700 border-gray w-28 rounded-md"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="packCost" className=" block mb-5 uppercase text-xs">
-            Packing
-          </label>
-          <input
-            type="number"
-            placeholder="0"
-            min={1}
-            name="packCost"
-            onChange={formik.handleChange}
-            value={formik.values.packCost}
-            className="bg-transparent text-black  text-2xl placeholder-black focus:border-l-4 border-gray-700 border-gray w-28 rounded-md"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="misc" className=" block mb-5 uppercase text-xs">
-            Miscellaneous
-          </label>
-          <input
-            type="number"
-            placeholder="0"
-            min={1}
-            name="misc"
-            onChange={formik.handleChange}
-            value={formik.values.misc}
-            className="bg-transparent text-black  text-2xl placeholder-black focus:border-l-4 border-gray-700 border-gray w-28 rounded-md"
-          />
-        </div>
-        <button type="submit" className="bg-blue block mb-5 uppercase text-xs rounded-full">Send it</button>
-        <button type="button" className="bg-blue block mb-5 uppercase text-xs rounded-full">Generate PDF</button>
-      </form>
-
-      <div className="p-4 w-1/3 bg-gray rounded-lg grid grid-cols-2 gap-3">
-        <div>
-          <p className=" block mb-5 uppercase text-xs">Total</p>
-          <p className="bg-transparent text-black  text-2xl">{total}</p>
-        </div>
-
-        <div>
-          <p className=" block mb-5 uppercase text-xs">Amount to be quoted</p>
-          <p className="bg-transparent text-black  text-2xl">{quote}</p>
-        </div>
-
-        <div>
-          <p className=" block mb-5 uppercase text-xs">16% VAT</p>
-          <p className="bg-transparent text-black  text-2xl">{tax}</p>
-        </div>
-
-        <div>
-          <p className=" block mb-5 uppercase text-xs">Profit</p>
-          <p className="bg-transparent text-black  text-2xl">{profit}</p>
-        </div>
-
-        <div>
-          <p className=" block mb-5 uppercase text-xs">Percentage Profit</p>
-          <p className="bg-transparent text-black  text-2xl">{percProf}%</p>
-        </div>
-
-        <div>
-          <p className=" block mb-5 uppercase text-xs">Tithe</p>
-          <p className="bg-transparent text-black  text-2xl">{0.12 * profit}</p>
-        </div>
+        <aside className="lg:col-span-5">
+          <h2 className="text-label text-ink-faint">Result</h2>
+          <dl
+            aria-live="polite"
+            className="mt-7 divide-y divide-line border-y border-line"
+          >
+            {results.map((row) => (
+              <div
+                key={row.label}
+                className="flex items-baseline justify-between gap-6 py-5"
+              >
+                <dt className="text-label text-ink-muted">{row.label}</dt>
+                <dd
+                  className={`tabular-nums ${
+                    row.lead
+                      ? "text-display text-3xl text-accent"
+                      : "text-xl text-ink"
+                  }`}
+                >
+                  {row.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </aside>
       </div>
     </div>
   );

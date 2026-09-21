@@ -444,8 +444,14 @@ export const FEATURED = CAMPAIGNS.filter((c) => c.featured && c.medium === "prin
 export const FILMS = CAMPAIGNS.filter((c) => c.medium === "film");
 export const RADIO = CAMPAIGNS.filter((c) => c.medium === "radio");
 
-export const bySlug = (slug: string) =>
-  CAMPAIGNS.find((c) => c.slug === slug);
+export const bySlug = (slug: string) => CAMPAIGNS.find((c) => c.slug === slug);
+
+/** Radio has no artwork, so it falls through to a typographic card. */
+export const coverOf = (c: Campaign) =>
+  c.print?.[0]?.thumb ?? c.films?.[0]?.poster ?? null;
+
+export const pieceCount = (c: Campaign) =>
+  (c.print?.length ?? 0) + (c.films?.length ?? 0) + (c.radio?.length ?? 0);
 
 /** Every print image on the site, used for the hero mosaic. */
 export const ALL_PRINT: PrintPiece[] = CAMPAIGNS.flatMap((c) => c.print ?? []);
