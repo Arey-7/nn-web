@@ -1,36 +1,191 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-body{
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------
+   Semantic tokens. These flip per theme; @theme inline below maps
+   them onto Tailwind utilities (bg-paper, text-ink, border-line…).
+   --------------------------------------------------------------- */
+
+:root {
+  --paper: #faf8f4;
+  --paper-raised: #ffffff;
+  --paper-sunk: #efece5;
+  --ink: #111113;
+  --ink-muted: #55555c;
+  --ink-faint: #8a8a92;
+  --line: rgb(17 17 19 / 0.14);
+  --line-strong: rgb(17 17 19 / 0.28);
+  --accent: #00245d;
+  --scrim: rgb(250 248 244 / 0.86);
+}
+
+.dark {
+  --paper: #08080a;
+  --paper-raised: #101014;
+  --paper-sunk: #000000;
+  --ink: #f4f1ec;
+  --ink-muted: #9a9a9f;
+  --ink-faint: #5e5e64;
+  --line: rgb(244 241 236 / 0.14);
+  --line-strong: rgb(244 241 236 / 0.3);
+  --accent: #4a84d8;
+  --scrim: rgb(8 8 10 / 0.88);
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-paper-sunk: var(--paper-sunk);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-scrim: var(--scrim);
+
+  /* Fixed brand marks, straight off the logo. These never flip. */
+  --color-navy: #00245d;
+  --color-coal: #231f20;
+  --color-grey-mid: #606163;
+  --color-grey-light: #808284;
+
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-drift: drift 60s linear infinite;
+}
+
+/* Declared outside @theme so they are always emitted — the hero drives `drift`
+   from an inline style rather than a utility class, and Tailwind only emits
+   @theme keyframes when it sees the matching utility. */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes drift {
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
     overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: #ffffff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* Optical sizing is the whole reason Fraunces is here — let the
+     display axis do its job at large sizes. */
+  .font-display {
+    font-optical-sizing: auto;
+  }
 }
 
-.menu-button{
-    --button-color: black;
-    overflow: hidden;
-    transition: 0.6s;
+@layer utilities {
+  /* Editorial display type: tight, dense, slightly negative tracking. */
+  .text-display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    font-optical-sizing: auto;
+  }
+
+  /* Small caps labels used for metadata: client, year, medium. */
+  .text-label {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .edge-fade-y {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      #000 12%,
+      #000 88%,
+      transparent
+    );
+  }
+
+  .edge-fade-x {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
+  }
 }
 
-.line{
-    transition: 1s;
-    stroke-dasharray: 60 30 60 300;
-}
-.menu-button .hamburger{
-    transition: 1s;
-}
+/* ---------------------------------------------------------------
+   Navbar hamburger. The single stroke morphs from menu to close by
+   redistributing its own dash array — no second icon to swap in.
+   --------------------------------------------------------------- */
 
-.menu-button[aria-expanded="false"]:hover{
-    scale: 1 1.1;
-}
-
-
-.menu-button[aria-expanded="true"] .hamburger{
-    translate: 4px -6px;
-    rotate: .125turn;
+.menu-button {
+  --button-color: currentColor;
+  overflow: hidden;
+  transition: 0.6s;
 }
 
-.menu-button[aria-expanded="true"] .line{
-    stroke-dasharray: 60 165 60 300;
-    stroke-dashoffset: -90;
+.line {
+  transition: 1s;
+  stroke-dasharray: 60 30 60 300;
+}
+
+.menu-button .hamburger {
+  transition: 1s;
+}
+
+.menu-button[aria-expanded="false"]:hover {
+  scale: 1 1.1;
+}
+
+.menu-button[aria-expanded="true"] .hamburger {
+  translate: 4px -6px;
+  rotate: 0.125turn;
+}
+
+.menu-button[aria-expanded="true"] .line {
+  stroke-dasharray: 60 165 60 300;
+  stroke-dashoffset: -90;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -1,13 +1,19 @@
-import Image from "next/image";
-import ArtGallery from "./sections/art-gallery";
-import AdGallery from "./sections/ad-gallery";
+import Hero from "./sections/hero";
+import Statement from "./sections/statement";
+import FeaturedWork from "./sections/featured-work";
+import FilmRoom from "./sections/film-room";
+import RadioRoom from "./sections/radio-room";
+import ClientMarquee from "./sections/client-marquee";
 
-// `app/page.tsx` is the UI for the `/` URL
 export default function Page() {
   return (
-    <main className="text-5xl">
-      <ArtGallery />
-      <AdGallery />
-    </main>
+    <>
+      <Hero />
+      <Statement />
+      <FeaturedWork />
+      <FilmRoom />
+      <RadioRoom />
+      <ClientMarquee />
+    </>
   );
 }

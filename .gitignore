@@ -33,3 +33,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated web derivatives of public/ads — rebuild with `npm run assets`
+/public/w
