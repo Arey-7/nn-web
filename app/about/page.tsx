@@ -6,7 +6,7 @@ import { CAMPAIGNS, CLIENTS } from "../content/work";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Noah's Navy is an advertising agency in Nairobi working across press, film and radio for brands and for causes.",
+    "Reef Rooster is an advertising agency in Nairobi working across press, film and radio for brands and for causes.",
 };
 
 const DISCIPLINES = Array.from(new Set(CAMPAIGNS.map((c) => c.discipline)));
@@ -40,7 +40,7 @@ export default function AboutPage() {
             to the people.
           </>
         }
-        lede="Noah's Navy is an advertising agency in Nairobi. We write press, film and radio for organisations that have something worth saying and a reason for saying it now."
+        lede="Reef Rooster is an advertising agency in Nairobi. We write press, film and radio for organisations that have something worth saying and a reason for saying it now."
       />
 
       <section className="mx-auto mt-24 max-w-[1600px] px-6 md:px-10">

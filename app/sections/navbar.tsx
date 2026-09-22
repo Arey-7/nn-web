@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import { SITE } from "../content/site";
+import Wordmark from "../components/wordmark";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -83,14 +83,7 @@ export default function Navbar() {
       >
         <nav className="flex items-center justify-between px-6 py-4 md:px-10">
           <Link href="/" aria-label={`${SITE.name} — home`} className="relative z-50">
-            <Image
-              src="/nn_logo.svg"
-              alt={SITE.legalName}
-              width={148}
-              height={26}
-              priority
-              className="h-5.5 w-auto brightness-0 dark:invert"
-            />
+            <Wordmark className="text-ink" />
           </Link>
 
           <button

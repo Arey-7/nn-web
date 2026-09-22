@@ -4,7 +4,7 @@ import { SITE } from "../content/site";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Talk to Noah's Navy about press, film and radio work.",
+  description: "Talk to Reef Rooster about press, film and radio work.",
 };
 
 const REASONS = [

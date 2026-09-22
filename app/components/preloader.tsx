@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { CLIENTS } from "../content/work";
+import { SITE } from "../content/site";
 
 const SLATS = 7;
 
@@ -14,14 +15,14 @@ export default function Preloader() {
 
   useEffect(() => {
     // Once per session — nobody wants the overture on every navigation.
-    if (sessionStorage.getItem("nn-intro") === "seen") {
+    if (sessionStorage.getItem("rr-intro") === "seen") {
       setDone(true);
       return;
     }
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) {
-      sessionStorage.setItem("nn-intro", "seen");
+      sessionStorage.setItem("rr-intro", "seen");
       setDone(true);
       return;
     }
@@ -31,7 +32,7 @@ export default function Preloader() {
 
     const tl = gsap.timeline({
       onComplete: () => {
-        sessionStorage.setItem("nn-intro", "seen");
+        sessionStorage.setItem("rr-intro", "seen");
         document.body.style.overflow = "";
         setDone(true);
       },
@@ -88,7 +89,7 @@ export default function Preloader() {
       <div className="absolute inset-0 flex flex-col justify-between p-6 md:p-10">
         <div className="overflow-hidden">
           <p className="intro-line text-label text-ink-faint">
-            Noah&rsquo;s Navy &mdash; Nairobi
+            {SITE.name} &mdash; {SITE.address.split(",")[0]}
           </p>
         </div>
 

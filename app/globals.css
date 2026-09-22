@@ -45,11 +45,6 @@
   --color-accent: var(--accent);
   --color-scrim: var(--scrim);
 
-  /* Fixed brand marks, straight off the logo. These never flip. */
-  --color-navy: #00245d;
-  --color-coal: #231f20;
-  --color-grey-mid: #606163;
-  --color-grey-light: #808284;
 
   --font-display: var(--font-fraunces), Georgia, serif;
   --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;

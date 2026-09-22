@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" role="img" aria-label="Reef Rooster">
+  <!-- Placeholder identity mark: a rooster's comb, three scallops on a flat
+       base. Built to survive a 16px favicon, which is why it is one solid
+       shape and no strokes. Replace with the real artwork when it exists. -->
+  <rect width="40" height="40" rx="8" fill="#00245d"/>
+  <path fill="#ffffff" d="M6 29V19a4.667 4.667 0 0 1 9.333 0 4.667 4.667 0 0 1 9.334 0 4.667 4.667 0 0 1 9.333 0v10Z"/>
+</svg>

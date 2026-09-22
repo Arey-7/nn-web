@@ -24,8 +24,8 @@ const archivo = Archivo({
 
 export const metadata: Metadata = {
   title: {
-    default: "Noah's Navy Communications",
-    template: "%s — Noah's Navy",
+    default: "Reef Rooster Communications",
+    template: "%s — Reef Rooster",
   },
   description:
     "We link brands and causes to the people. An advertising agency in Nairobi.",
@@ -46,7 +46,7 @@ export default function RootLayout({
       className={`${fraunces.variable} ${archivo.variable}`}
     >
       <head>
-        <link rel="icon" href="/nn-flag.png" />
+        <link rel="icon" href="/rr-mark.svg" type="image/svg+xml" />
         <Script id="theme" strategy="beforeInteractive">
           {THEME_SCRIPT}
         </Script>
