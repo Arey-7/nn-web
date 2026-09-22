@@ -164,7 +164,7 @@ export default function FilmRoom() {
     >
       <div
         className={`mx-auto w-full max-w-[1600px] shrink-0 px-6 md:px-10 ${
-          rail ? "pt-28" : ""
+          rail ? "pt-24" : ""
         }`}
       >
         <div className="flex items-baseline justify-between border-b border-line pb-6">

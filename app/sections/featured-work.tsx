@@ -38,14 +38,20 @@ export default function FeaturedWork() {
       ScrollTrigger.create({
         trigger: root.current,
         start: "top top",
-        end: () => `+=${FEATURED.length * window.innerHeight}`,
+        // One viewport per campaign *after* the first. The pinned panel then
+        // scrolls away as the last campaign's own screen, instead of leaving
+        // an empty viewport of dead scroll between here and the film room.
+        end: () => `+=${(FEATURED.length - 1) * window.innerHeight}`,
         pin: pinned.current,
         scrub: true,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
+          // Distance is one viewport per gap between campaigns, so progress
+          // maps across length-1 and rounds to the nearest — each campaign
+          // holds the screen for an equal share.
           const next = Math.min(
             FEATURED.length - 1,
-            Math.floor(self.progress * FEATURED.length)
+            Math.round(self.progress * (FEATURED.length - 1))
           );
           setIndex((prev) => (prev === next ? prev : next));
         },
