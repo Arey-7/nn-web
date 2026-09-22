@@ -1,10 +1,13 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Fraunces, Archivo } from "next/font/google";
-import { Providers } from "./providers";
+import { Providers, THEME_SCRIPT } from "./providers";
 import Navbar from "./sections/navbar";
 import Footer from "./sections/footer";
 import ThemeButton from "./components/theme-button";
+import SmoothScroll from "./lib/smooth-scroll";
+import Cursor from "./components/cursor";
+import Preloader from "./components/preloader";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -40,9 +43,13 @@ export default function RootLayout({
     >
       <head>
         <link rel="icon" href="/nn-flag.png" />
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
-      <body className="font-sans bg-paper text-ink">
+      <body className="grain font-sans bg-paper text-ink">
         <Providers>
+          <Preloader />
+          <SmoothScroll />
+          <Cursor />
           <Navbar />
           <main id="main">{children}</main>
           <ThemeButton />

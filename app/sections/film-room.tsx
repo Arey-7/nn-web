@@ -1,9 +1,18 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import Image from "next/image";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lightbox from "../components/lightbox";
-import { FILMS, accentVars, type Campaign, type FilmPiece } from "../content/work";
+import {
+  FILMS,
+  accentVars,
+  type Campaign,
+  type FilmPiece,
+} from "../content/work";
+
+gsap.registerPlugin(ScrollTrigger);
 
 type Entry = FilmPiece & { campaign: Campaign };
 
@@ -11,21 +20,29 @@ const ENTRIES: Entry[] = FILMS.flatMap((c) =>
   (c.films ?? []).map((film) => ({ ...film, campaign: c }))
 );
 
+const RAIL_QUERY =
+  "(min-width: 1024px) and (prefers-reduced-motion: no-preference)";
+
 const runtime = (s: number) =>
   s >= 60 ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}` : `0:${s}`;
 
-function FilmCard({ entry, onOpen }: { entry: Entry; onOpen: () => void }) {
+function FilmCard({
+  entry,
+  index,
+  onOpen,
+}: {
+  entry: Entry;
+  index: number;
+  onOpen: () => void;
+}) {
   const video = useRef<HTMLVideoElement>(null);
   const [previewing, setPreviewing] = useState(false);
 
-  // The loops are muted, six seconds and only ever fetched on intent — the
-  // poster carries the card until someone actually reaches for it.
   const start = () => {
     if (!window.matchMedia("(hover: hover)").matches) return;
     setPreviewing(true);
     video.current?.play().catch(() => setPreviewing(false));
   };
-
   const stop = () => {
     setPreviewing(false);
     video.current?.pause();
@@ -39,20 +56,19 @@ function FilmCard({ entry, onOpen }: { entry: Entry; onOpen: () => void }) {
       onMouseLeave={stop}
       onFocus={start}
       onBlur={stop}
+      data-cursor="play"
       className="group block w-full text-left"
       aria-label={`Play ${entry.campaign.client} — ${entry.title}`}
     >
-      {/* Broadcast monitor: these are SD masters, so they are framed rather
-          than blown up, and the frame is part of the art direction. */}
-      <div className="relative overflow-hidden rounded-[3px] border border-line bg-black shadow-[inset_0_0_60px_rgba(0,0,0,0.9)] transition-colors duration-500 group-hover:border-line-strong">
+      <div className="relative overflow-hidden border border-line bg-black shadow-[inset_0_0_80px_rgba(0,0,0,0.95)] transition-colors duration-500 group-hover:border-line-strong">
         <div className="relative aspect-video">
           <Image
             src={entry.poster}
             alt=""
             fill
-            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            className={`object-cover transition-opacity duration-500 ${
-              previewing ? "opacity-0" : "opacity-100"
+            sizes="(min-width: 1024px) 46vw, (min-width: 640px) 50vw, 100vw"
+            className={`object-cover transition-all duration-700 ${
+              previewing ? "opacity-0" : "opacity-100 grayscale group-hover:grayscale-0"
             }`}
           />
           <video
@@ -69,25 +85,24 @@ function FilmCard({ entry, onOpen }: { entry: Entry; onOpen: () => void }) {
               previewing ? "opacity-100" : "opacity-0"
             }`}
           />
-
           <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+
+          <span className="pointer-events-none absolute left-5 top-4 text-display text-[3.5rem] leading-none text-white/25 tabular-nums">
+            {String(index + 1).padStart(2, "0")}
+          </span>
 
           <span className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-black/70 px-2.5 py-1 text-[11px] font-semibold tabular-nums text-white/90">
             {runtime(entry.seconds)}
-          </span>
-
-          <span className="pointer-events-none absolute left-1/2 top-1/2 grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/40 bg-black/30 text-white opacity-0 backdrop-blur-sm transition-all duration-500 ease-(--ease-out-expo) group-hover:scale-110 group-hover:opacity-100">
-            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M8 5v14l11-7z" fill="currentColor" />
-            </svg>
           </span>
         </div>
       </div>
 
       <div className="mt-4 flex items-baseline justify-between gap-4">
-        <div>
-          <p className="text-label text-ink-faint">{entry.campaign.client}</p>
-          <p className="mt-1.5 text-lg text-ink transition-colors group-hover:text-accent">
+        <div className="min-w-0">
+          <p className="text-label truncate text-ink-faint">
+            {entry.campaign.client}
+          </p>
+          <p className="mt-1.5 truncate text-xl text-ink transition-colors group-hover:text-accent">
             {entry.title}
           </p>
         </div>
@@ -104,10 +119,54 @@ function FilmCard({ entry, onOpen }: { entry: Entry; onOpen: () => void }) {
 
 export default function FilmRoom() {
   const [active, setActive] = useState<Entry | null>(null);
+  const [rail, setRail] = useState(false);
+  const section = useRef<HTMLElement>(null);
+  const track = useRef<HTMLUListElement>(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia(RAIL_QUERY);
+    const sync = () => setRail(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!rail) return;
+    const ctx = gsap.context(() => {
+      const el = track.current;
+      if (!el) return;
+      const distance = () => Math.max(0, el.scrollWidth - window.innerWidth + 80);
+
+      gsap.to(el, {
+        x: () => -distance(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: section.current,
+          start: "top top",
+          end: () => `+=${distance()}`,
+          pin: true,
+          scrub: 0.8,
+          invalidateOnRefresh: true,
+        },
+      });
+    }, section);
+    return () => ctx.revert();
+  }, [rail]);
 
   return (
-    <section aria-labelledby="film-heading" className="bg-paper-sunk py-28">
-      <div className="mx-auto max-w-[1600px] px-6 md:px-10">
+    <section
+      ref={section}
+      aria-labelledby="film-heading"
+      className={`relative overflow-hidden bg-paper-sunk ${
+        rail ? "flex h-svh flex-col" : "py-24"
+      }`}
+    >
+      <div
+        className={`mx-auto w-full max-w-[1600px] shrink-0 px-6 md:px-10 ${
+          rail ? "pt-28" : ""
+        }`}
+      >
         <div className="flex items-baseline justify-between border-b border-line pb-6">
           <h2 id="film-heading" className="text-label text-ink-faint">
             The film room
@@ -117,14 +176,39 @@ export default function FilmRoom() {
           </p>
         </div>
 
-        <p className="mt-10 max-w-2xl text-display text-[clamp(1.7rem,3.6vw,3.2rem)] text-ink">
-          Television, as it went out &mdash; straight off the broadcast masters.
+        <p
+          className={`max-w-3xl text-display text-ink ${
+            rail
+              ? "mt-7 text-[clamp(1.5rem,2.6vw,2.4rem)]"
+              : "mt-10 text-[clamp(1.9rem,4.6vw,4rem)]"
+          }`}
+        >
+          Television, as it went out &mdash; straight off the broadcast
+          masters.
         </p>
+      </div>
 
-        <ul className="mt-16 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-          {ENTRIES.map((entry) => (
-            <li key={entry.id}>
-              <FilmCard entry={entry} onOpen={() => setActive(entry)} />
+      <div className={rail ? "flex flex-1 items-center overflow-hidden" : ""}>
+        <ul
+          ref={track}
+          className={
+            rail
+              ? "flex w-max gap-10 px-6 will-change-transform md:px-10"
+              : "mx-auto mt-16 grid max-w-[1600px] gap-x-8 gap-y-14 px-6 sm:grid-cols-2 md:px-10 lg:grid-cols-3"
+          }
+        >
+          {ENTRIES.map((entry, i) => (
+            <li
+              key={entry.id}
+              className={rail ? "w-[34vw] shrink-0" : ""}
+              // Staggered baselines give the rail a horizon rather than a row.
+              style={rail ? { marginTop: `${(i % 3) * 2.2}rem` } : undefined}
+            >
+              <FilmCard
+                entry={entry}
+                index={i}
+                onOpen={() => setActive(entry)}
+              />
             </li>
           ))}
         </ul>

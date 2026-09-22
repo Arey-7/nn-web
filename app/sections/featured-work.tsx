@@ -110,6 +110,7 @@ export default function FeaturedWork() {
                       type="button"
                       onClick={() => setOpened(c)}
                       tabIndex={i === index ? 0 : -1}
+                      data-cursor="open"
                       className="group mt-9 inline-flex items-center gap-3 text-label text-ink"
                     >
                       <span
@@ -179,6 +180,7 @@ export default function FeaturedWork() {
                 <button
                   type="button"
                   onClick={() => setOpened(c)}
+                  data-cursor="open"
                   className="mt-8 block w-full"
                   aria-label={`See all ${c.print!.length} executions of ${c.title}`}
                 >

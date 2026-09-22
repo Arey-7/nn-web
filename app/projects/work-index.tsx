@@ -31,7 +31,11 @@ function Card({ campaign }: { campaign: Campaign }) {
   const n = pieceCount(campaign);
 
   return (
-    <Link href={`/projects/${campaign.slug}`} className="group block">
+    <Link
+      href={`/projects/${campaign.slug}`}
+      data-cursor="view"
+      className="group block"
+    >
       <div className="relative overflow-hidden border border-line bg-paper-sunk">
         {cover ? (
           <div
