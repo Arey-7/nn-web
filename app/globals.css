@@ -88,6 +88,12 @@ html:not(.dark) [data-webgl="hero"] {
   opacity: 0.26;
 }
 
+/* The tiles are clickable, so the wall comes up to meet a reader who starts
+   pointing at it — on the light theme it otherwise sits too far back to aim at. */
+html:not(.dark) [data-webgl="hero"][data-hovering="true"] {
+  opacity: 0.62;
+}
+
 /* Film grain over the whole page. One SVG turbulence tile, nudged around on a
    steps() timeline so it reads as moving emulsion rather than a static screen. */
 .grain::after {

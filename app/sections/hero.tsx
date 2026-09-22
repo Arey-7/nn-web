@@ -148,7 +148,10 @@ export default function Hero() {
       />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-paper-sunk to-transparent" />
 
-      <div className="mx-auto w-full max-w-[1600px] px-6 md:px-10">
+      {/* The headline lets the pointer through to the corridor behind it: the
+          tiles are clickable, and they spend most of their run crossing the
+          middle of the frame. Only the copy and the link below take events. */}
+      <div className="pointer-events-none mx-auto w-full max-w-[1600px] px-6 md:px-10">
         <h1 className="hero-type text-display text-[clamp(2.9rem,10.5vw,10.5rem)] text-ink">
           {LINES.map((line) => (
             <span key={line} className="block overflow-hidden py-[0.02em]">
@@ -162,7 +165,7 @@ export default function Hero() {
           ))}
         </h1>
 
-        <div className="hero-meta mt-10 flex flex-wrap items-end gap-x-10 gap-y-5">
+        <div className="hero-meta pointer-events-auto mt-10 flex flex-wrap items-end gap-x-10 gap-y-5">
           <p className="max-w-md text-lg leading-relaxed text-ink-muted">
             An advertising agency in Nairobi. Thirty years of press, film and
             radio for the brands and the causes that had something worth

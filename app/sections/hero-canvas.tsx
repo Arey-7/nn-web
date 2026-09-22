@@ -1,8 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Renderer, Camera, Transform, Plane, Program, Mesh, Texture } from "ogl";
-import { ALL_PRINT } from "../content/work";
+import { useRouter } from "next/navigation";
+import {
+  Renderer,
+  Camera,
+  Transform,
+  Plane,
+  Program,
+  Mesh,
+  Texture,
+  Raycast,
+  Vec2,
+  Vec3,
+  Mat4,
+} from "ogl";
+import { PRINT_INDEX, accentVars, type Campaign } from "../content/work";
 import { scrollState } from "../lib/smooth-scroll";
 
 const SPACING = 3.4; // gap between planes along Z
@@ -42,6 +55,8 @@ uniform sampler2D tMap;
 uniform float uFade;
 uniform float uColour;
 uniform float uVelocity;
+uniform float uHover;
+uniform float uDim;
 in vec2 vUv;
 out vec4 fragColor;
 
@@ -53,11 +68,15 @@ void main() {
   c.g = texture(tMap, vUv).g;
   c.b = texture(tMap, vUv - vec2(a, 0.0)).b;
 
-  // Distant work is grey; it regains its colour as it reaches the reader.
+  // Distant work is grey; it regains its colour as it reaches the reader, and
+  // a tile under the pointer comes fully forward wherever it happens to be.
   float grey = dot(c, vec3(0.299, 0.587, 0.114));
-  c = mix(vec3(grey), c, uColour);
+  c = mix(vec3(grey), c, max(uColour, uHover));
 
-  fragColor = vec4(c, uFade);
+  // A hovered tile lifts; everything else steps back so the target is
+  // unambiguous before the reader commits to a click.
+  c += uHover * 0.05;
+  fragColor = vec4(c, uFade * (1.0 - uDim * 0.55) * (1.0 + uHover * 0.25));
 }
 `;
 
@@ -68,11 +87,31 @@ const wrap = (z: number, depth: number) => {
   return v;
 };
 
+/** Everything the corridor hangs off a plane beyond what OGL puts there. */
+type Tile = Mesh & {
+  baseZ: number;
+  baseW: number;
+  baseH: number;
+  ready: boolean;
+  hover: number;
+  campaign: Campaign;
+  alt: string;
+};
+
+type Hover = { campaign: Campaign; alt: string } | null;
+
 type Props = { onReady?: () => void; onUnsupported?: () => void };
 
 export default function HeroCanvas({ onReady, onUnsupported }: Props) {
   const holder = useRef<HTMLDivElement>(null);
+  const caption = useRef<HTMLDivElement>(null);
+  const router = useRouter();
   const [failed, setFailed] = useState(false);
+  // Picking is a pointer affordance, so it is only wired up for pointers that
+  // can hover. On touch there is no way to show a target before committing to
+  // it, and a stray tap during a scroll would hijack the page.
+  const [interactive, setInteractive] = useState(false);
+  const [hover, setHover] = useState<Hover>(null);
 
   useEffect(() => {
     const node = holder.current;
@@ -116,10 +155,10 @@ export default function HeroCanvas({ onReady, onUnsupported }: Props) {
 
     const picks = Array.from(
       { length: COUNT },
-      (_, i) => ALL_PRINT[i % ALL_PRINT.length]
+      (_, i) => PRINT_INDEX[i % PRINT_INDEX.length]
     );
 
-    const meshes = picks.map((piece, i) => {
+    const meshes = picks.map(({ piece, campaign }, i) => {
       // WebGL2 handles mipmaps on non-power-of-two textures, which these are.
       // They matter here: planes shrink a long way into the distance and
       // shimmer badly when minified without them.
@@ -139,14 +178,22 @@ export default function HeroCanvas({ onReady, onUnsupported }: Props) {
           uFade: { value: 0 },
           uColour: { value: 0 },
           uVelocity: { value: 0 },
+          uHover: { value: 0 },
+          uDim: { value: 0 },
         },
         transparent: true,
         depthTest: false,
         depthWrite: false,
       });
 
-      const mesh = new Mesh(gl, { geometry, program });
+      const mesh = new Mesh(gl, { geometry, program }) as Tile;
       mesh.setParent(scene);
+      mesh.campaign = campaign;
+      mesh.alt = piece.alt;
+      mesh.ready = false;
+      mesh.hover = 0;
+      mesh.baseW = 1;
+      mesh.baseH = 1;
 
       // A ring rather than a scatter: the work streams past around the edges
       // of the frame and leaves the middle clear for the headline.
@@ -154,7 +201,7 @@ export default function HeroCanvas({ onReady, onUnsupported }: Props) {
       const radius = 3.5 + (i % 4) * 0.5;
       mesh.position.x = Math.cos(angle) * radius;
       mesh.position.y = Math.sin(angle) * radius * 0.58;
-      (mesh as unknown as { baseZ: number }).baseZ = -i * SPACING;
+      mesh.baseZ = -i * SPACING;
       mesh.rotation.z = Math.cos(angle) * 0.07;
 
       const img = new Image();
@@ -170,7 +217,11 @@ export default function HeroCanvas({ onReady, onUnsupported }: Props) {
               setTimeout(() => {
                 texture.image = img;
                 const h = 2.4;
-                mesh.scale.set((h * img.naturalWidth) / img.naturalHeight, h, 1);
+                mesh.baseH = h;
+                mesh.baseW = (h * img.naturalWidth) / img.naturalHeight;
+                mesh.scale.set(mesh.baseW, mesh.baseH, 1);
+                // Only a tile that has something on it can be picked.
+                mesh.ready = true;
                 done();
               }, i * 40)
             )
@@ -188,17 +239,111 @@ export default function HeroCanvas({ onReady, onUnsupported }: Props) {
     resize();
     window.addEventListener("resize", resize);
 
-    const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+    const pointer = { x: 0, y: 0, tx: 0, ty: 0, cx: -1, cy: -1, moved: false };
     const onMove = (e: PointerEvent) => {
       pointer.tx = (e.clientX / window.innerWidth) * 2 - 1;
       pointer.ty = (e.clientY / window.innerHeight) * 2 - 1;
+      pointer.cx = e.clientX;
+      pointer.cy = e.clientY;
+      pointer.moved = true;
     };
     window.addEventListener("pointermove", onMove, { passive: true });
 
-    // Only burn frames while the hero is actually on screen.
+    // ---- picking -------------------------------------------------------
+    // The planes are flat quads, so rather than testing 800 triangles apiece
+    // the ray is pushed into each tile's own space and met with z = 0. That is
+    // exact for a quad and cheap enough to run every frame the pointer moves.
+    const canHover = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const raycast = new Raycast();
+    const ndc = new Vec2();
+    const inv = new Mat4();
+    const rayO = new Vec3();
+    const rayD = new Vec3();
+    let picked: Tile | null = null;
+
+    const pickAt = (clientX: number, clientY: number): Tile | null => {
+      const rect = node.getBoundingClientRect();
+      if (!rect.width || !rect.height) return null;
+      ndc.set(
+        ((clientX - rect.left) / rect.width) * 2 - 1,
+        -(((clientY - rect.top) / rect.height) * 2 - 1)
+      );
+      raycast.castMouse(camera, ndc);
+
+      let best: Tile | null = null;
+      let bestT = Infinity;
+      for (const mesh of meshes) {
+        // A tile that has faded out is not there as far as the reader is
+        // concerned, so it must not be there for the pointer either.
+        if (!mesh.ready || mesh.program.uniforms.uFade.value < 0.25) continue;
+
+        inv.inverse(mesh.worldMatrix);
+        rayO.copy(raycast.origin).applyMatrix4(inv);
+        rayD.copy(raycast.direction).transformDirection(inv);
+        if (Math.abs(rayD.z) < 1e-6) continue;
+
+        const t = -rayO.z / rayD.z;
+        if (t <= 0 || t >= bestT) continue;
+
+        // Plane geometry is a unit quad about the origin; the scale that sizes
+        // it to the artwork is already in the matrix.
+        const hx = rayO.x + rayD.x * t;
+        const hy = rayO.y + rayD.y * t;
+        if (Math.abs(hx) > 0.5 || Math.abs(hy) > 0.5) continue;
+
+        best = mesh;
+        bestT = t;
+      }
+      return best;
+    };
+
+    const applyPick = (next: Tile | null) => {
+      if (next === picked) return;
+      picked = next;
+      gl.canvas.style.cursor = next ? "pointer" : "";
+      node.dataset.hovering = next ? "true" : "false";
+      setHover(next ? { campaign: next.campaign, alt: next.alt } : null);
+      // Warm the route while the reader is still deciding.
+      if (next) router.prefetch(`/projects/${next.campaign.slug}`);
+    };
+
+    const onClick = (e: MouseEvent) => {
+      if (!canHover.matches) return;
+      const hit = pickAt(e.clientX, e.clientY);
+      if (hit) router.push(`/projects/${hit.campaign.slug}`);
+    };
+
+    const onLeave = () => applyPick(null);
+
+    const syncHover = () => setInteractive(canHover.matches);
+    syncHover();
+    canHover.addEventListener("change", syncHover);
+    node.addEventListener("click", onClick);
+    window.addEventListener("blur", onLeave);
+    document.addEventListener("pointerleave", onLeave);
+
+    // The caption trails the pointer rather than sitting on it, and is kept
+    // clear of the viewport edges so it never opens off screen.
+    const placeCaption = () => {
+      const el = caption.current;
+      if (!el) return;
+      const w = el.offsetWidth || 300;
+      const h = el.offsetHeight || 120;
+      const x = Math.min(Math.max(pointer.cx + 26, 12), window.innerWidth - w - 12);
+      const y = Math.min(Math.max(pointer.cy + 22, 12), window.innerHeight - h - 12);
+      el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    };
+
+    // Only burn frames while the hero is actually on screen. Dropping the pick
+    // on the way out matters as much as stopping the loop: the render loop is
+    // what clears a hover, so scrolling away mid-hover would otherwise leave
+    // the caption stranded over the rest of the page.
     let visible = true;
     const io = new IntersectionObserver(
-      ([entry]) => (visible = entry.isIntersecting),
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (!visible) applyPick(null);
+      },
       { threshold: 0 }
     );
     io.observe(node);
@@ -225,8 +370,7 @@ export default function HeroCanvas({ onReady, onUnsupported }: Props) {
       scene.rotation.x = pointer.y * 0.08;
 
       for (const mesh of meshes) {
-        const base = (mesh as unknown as { baseZ: number }).baseZ;
-        const z = wrap(base + travel, DEPTH);
+        const z = wrap(mesh.baseZ + travel, DEPTH);
         mesh.position.z = z;
 
         // Fade in from the far plane, and out as it sweeps past the camera.
@@ -240,6 +384,30 @@ export default function HeroCanvas({ onReady, onUnsupported }: Props) {
         u.uVelocity.value = smoothVelocity;
       }
 
+      // Matrices have to be current before the ray is cast against them, or
+      // the pointer tests a frame that is no longer on screen.
+      scene.updateMatrixWorld();
+
+      if (canHover.matches && pointer.moved) {
+        pointer.moved = false;
+        applyPick(pickAt(pointer.cx, pointer.cy));
+      }
+
+      for (const mesh of meshes) {
+        const want = mesh === picked ? 1 : 0;
+        mesh.hover += (want - mesh.hover) * 0.14;
+        if (mesh.hover < 0.001) mesh.hover = 0;
+        const u = mesh.program.uniforms;
+        u.uHover.value = mesh.hover;
+        u.uDim.value = picked && mesh !== picked ? 1 - mesh.hover : 0;
+        if (mesh.ready) {
+          const pop = 1 + mesh.hover * 0.05;
+          mesh.scale.set(mesh.baseW * pop, mesh.baseH * pop, 1);
+        }
+      }
+
+      if (picked) placeCaption();
+
       renderer.render({ scene, camera });
     };
 
@@ -251,19 +419,60 @@ export default function HeroCanvas({ onReady, onUnsupported }: Props) {
       io.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onMove);
+      canHover.removeEventListener("change", syncHover);
+      node.removeEventListener("click", onClick);
+      window.removeEventListener("blur", onLeave);
+      document.removeEventListener("pointerleave", onLeave);
       gl.canvas.remove();
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
-  }, [onReady, onUnsupported]);
+  }, [onReady, onUnsupported, router]);
 
   if (failed) return null;
 
   return (
-    <div
-      ref={holder}
-      aria-hidden="true"
-      data-webgl="hero"
-      className="pointer-events-none absolute inset-0 -z-10"
-    />
+    <>
+      <div
+        ref={holder}
+        aria-hidden="true"
+        data-webgl="hero"
+        className={`absolute inset-0 -z-10 ${
+          interactive ? "pointer-events-auto" : "pointer-events-none"
+        }`}
+      />
+
+      {/* The corridor is decorative to assistive tech — every campaign in it is
+          reachable through Selected work and /projects — so the caption is
+          hidden too rather than announcing a target only a mouse can reach. */}
+      <div
+        ref={caption}
+        aria-hidden="true"
+        style={hover ? accentVars(hover.campaign) : undefined}
+        className={`pointer-events-none fixed left-0 top-0 z-95 w-76 border border-line bg-paper-raised/95 p-5 backdrop-blur-sm transition-opacity duration-300 ${
+          hover ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        {hover && (
+          <>
+            <div className="flex items-center gap-3">
+              <span className="ca-bg h-px w-8" />
+              <span className="text-label ca-text">
+                {hover.campaign.discipline}
+                {hover.campaign.year ? ` · ${hover.campaign.year}` : ""}
+              </span>
+            </div>
+            <p className="mt-4 text-label text-ink-muted">
+              {hover.campaign.client}
+            </p>
+            <p className="mt-2 text-display text-2xl leading-tight text-ink">
+              {hover.campaign.headline}
+            </p>
+            <p className="mt-4 text-label text-ink-faint">
+              Click to open the case study
+            </p>
+          </>
+        )}
+      </div>
+    </>
   );
 }

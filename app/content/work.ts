@@ -480,8 +480,16 @@ export const coverOf = (c: Campaign) =>
 export const pieceCount = (c: Campaign) =>
   (c.print?.length ?? 0) + (c.films?.length ?? 0) + (c.radio?.length ?? 0);
 
+/**
+ * Every print image on the site paired with the campaign it came from. The
+ * hero corridor needs the pairing: a tile there is clickable, so it has to
+ * know which case study it opens.
+ */
+export const PRINT_INDEX: { piece: PrintPiece; campaign: Campaign }[] =
+  CAMPAIGNS.flatMap((c) => (c.print ?? []).map((piece) => ({ piece, campaign: c })));
+
 /** Every print image on the site, used for the hero mosaic. */
-export const ALL_PRINT: PrintPiece[] = CAMPAIGNS.flatMap((c) => c.print ?? []);
+export const ALL_PRINT: PrintPiece[] = PRINT_INDEX.map((e) => e.piece);
 
 export const CLIENTS = Array.from(
   new Set(CAMPAIGNS.map((c) => c.client))
