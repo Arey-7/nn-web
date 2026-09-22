@@ -35,11 +35,17 @@ const apply = (t: Theme) => {
 export function Providers({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("dark");
 
-  // The head script has already set the class; this just syncs React to it.
+  // React owns <html className> for the font variables, so hydration wipes the
+  // class the head script added. Read the stored choice and re-assert it.
   useEffect(() => {
-    setThemeState(
-      document.documentElement.classList.contains("light") ? "light" : "dark"
-    );
+    let stored: Theme = "dark";
+    try {
+      stored = localStorage.getItem("theme") === "light" ? "light" : "dark";
+    } catch {
+      // Private browsing — fall back to the default.
+    }
+    setThemeState(stored);
+    apply(stored);
   }, []);
 
   const setTheme = useCallback((t: Theme) => {

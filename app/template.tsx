@@ -1,30 +1,34 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 
 const SLATS = 7;
 
+// Survives the remount this component gets on every navigation, so the cold
+// load can be told apart from a route change without reading window during
+// render — doing that server/client branch in state is a hydration mismatch.
+let navigated = false;
+
 /**
- * Re-mounts on every navigation, so the cover can wipe away as the new route
- * paints. On a cold load the preloader owns the screen instead, and this
- * stands down to avoid two curtains at once.
+ * Wipes a set of slats away as each new route paints. The slats render
+ * collapsed, identical on server and client, and only open when a navigation
+ * actually happens; on a cold load the preloader owns the screen instead.
  */
 export default function Template({ children }: { children: React.ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
   const cover = useRef<HTMLDivElement>(null);
   const body = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const [covering] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      sessionStorage.getItem("nn-intro") === "seen" &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
 
   useLayoutEffect(() => {
-    if (!covering) return;
+    const first = !navigated;
+    navigated = true;
+    if (first) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const slats = cover.current?.children;
     if (!slats?.length || !body.current) return;
 
@@ -35,7 +39,6 @@ export default function Template({ children }: { children: React.ReactNode }) {
         duration: 0.75,
         stagger: 0.05,
         ease: "expo.inOut",
-        onComplete: () => cover.current?.remove(),
       });
       gsap.from(body.current, {
         opacity: 0,
@@ -47,21 +50,19 @@ export default function Template({ children }: { children: React.ReactNode }) {
     }, root);
 
     return () => ctx.revert();
-  }, [covering, pathname]);
+  }, [pathname]);
 
   return (
     <div ref={root}>
-      {covering && (
-        <div
-          ref={cover}
-          aria-hidden="true"
-          className="pointer-events-none fixed inset-0 z-[110] flex"
-        >
-          {Array.from({ length: SLATS }).map((_, i) => (
-            <div key={i} className="h-full flex-1 bg-paper-sunk" />
-          ))}
-        </div>
-      )}
+      <div
+        ref={cover}
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 z-110 flex"
+      >
+        {Array.from({ length: SLATS }).map((_, i) => (
+          <div key={i} className="h-full flex-1 scale-y-0 bg-paper-sunk" />
+        ))}
+      </div>
       <div ref={body}>{children}</div>
     </div>
   );

@@ -76,6 +76,18 @@
   }
 }
 
+/* The corridor is made of dark artwork, which reads as depth against the dark
+   theme but swallows the headline on the light one. There it sits much
+   further back and behaves like paper held up to daylight. */
+[data-webgl="hero"] {
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+html:not(.dark) [data-webgl="hero"] {
+  opacity: 0.26;
+}
+
 /* Film grain over the whole page. One SVG turbulence tile, nudged around on a
    steps() timeline so it reads as moving emulsion rather than a static screen. */
 .grain::after {

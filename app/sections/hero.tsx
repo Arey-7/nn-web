@@ -149,7 +149,7 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-paper-sunk to-transparent" />
 
       <div className="mx-auto w-full max-w-[1600px] px-6 md:px-10">
-        <h1 className="hero-type text-display text-[clamp(2.9rem,10.5vw,10.5rem)] text-ink mix-blend-difference">
+        <h1 className="hero-type text-display text-[clamp(2.9rem,10.5vw,10.5rem)] text-ink">
           {LINES.map((line) => (
             <span key={line} className="block overflow-hidden py-[0.02em]">
               <span className="block">
