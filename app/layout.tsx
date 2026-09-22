@@ -37,19 +37,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    // The theme script writes a class onto <html> before paint, so React must
-    // not own this element's className — hence the font variables live on
-    // <body> instead, and nothing here is reconciled against that class.
-    <html lang="en" suppressHydrationWarning>
+    // The font variables must live on <html>: Tailwind resolves --font-display
+    // against :root, so declaring them any lower leaves that token empty and
+    // display type silently falls back to the body sans.
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${fraunces.variable} ${archivo.variable}`}
+    >
       <head>
         <link rel="icon" href="/nn-flag.png" />
         <Script id="theme" strategy="beforeInteractive">
           {THEME_SCRIPT}
         </Script>
       </head>
-      <body
-        className={`${fraunces.variable} ${archivo.variable} grain font-sans bg-paper text-ink`}
-      >
+      <body className="grain font-sans bg-paper text-ink">
         <Providers>
           <Preloader />
           <SmoothScroll />
