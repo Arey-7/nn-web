@@ -204,6 +204,29 @@ export const money = (n: number) =>
   n.toLocaleString("en-KE", { maximumFractionDigits: 0 });
 
 export type Values = Record<string, number>;
+
+/**
+ * Turns the raw strings a form holds into the numbers a price is made of.
+ *
+ * Shared rather than duplicated, because the ledger recomputes a quote on the
+ * server from the same inputs the browser used. Two copies of "what does an
+ * empty field mean" would eventually disagree, and the row written to the
+ * ledger would stop matching the figure on the client's sheet.
+ *
+ * An unparseable or negative entry counts as zero: a cost cannot be negative,
+ * and a half-typed number is not a discount.
+ */
+export function parseValues(
+  job: JobType,
+  raw: Record<string, string>
+): Values {
+  const out: Values = {};
+  for (const field of fieldsOf(job)) {
+    const n = parseFloat(raw[valueKey(job.id, field.key)]);
+    out[field.key] = Number.isFinite(n) ? Math.max(0, n) : 0;
+  }
+  return out;
+}
 export type Line = { label: string; detail: string; amount: number };
 
 export type Quote = {

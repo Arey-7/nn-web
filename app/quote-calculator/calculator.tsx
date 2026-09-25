@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { SITE } from "../content/site";
+import { saveQuote } from "./ledger/actions";
 import QuoteDocument, { type Job } from "./quote-document";
 import {
   CURRENCY,
@@ -11,12 +13,12 @@ import {
   fieldsOf,
   jobById,
   money,
+  parseValues,
   priceJob,
   quotedLines,
   valueKey,
   type FieldSpec,
   type JobType,
-  type Values,
 } from "./pricing";
 
 const STORE = "rr-quote";
@@ -193,6 +195,8 @@ export default function Calculator() {
   // where an itemised quotation is usually what procurement needs to approve
   // the spend at all. The figures shown are prices, so nothing is given away.
   const [itemised, setItemised] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState<string | null>(null);
 
   const type: JobType = jobById(jobId);
 
@@ -246,14 +250,7 @@ export default function Calculator() {
     [fields, type.id, raw]
   );
 
-  const values = useMemo(() => {
-    const out: Values = {};
-    for (const f of fields) {
-      const n = parseFloat(raw[valueKey(type.id, f.key)]);
-      out[f.key] = Number.isFinite(n) ? Math.max(0, n) : 0;
-    }
-    return out;
-  }, [fields, type.id, raw]);
+  const values = useMemo(() => parseValues(type, raw), [type, raw]);
 
   const q = useMemo(() => priceJob(type, values), [type, values]);
 
@@ -285,6 +282,30 @@ export default function Calculator() {
       "",
       `Prepared by ${SITE.legalName}.`,
     ].join("\n");
+
+  const save = async () => {
+    setSaving(true);
+    setSaved(null);
+    // Only this job's fields go into the record. A saved print quote carrying
+    // whatever happened to be typed in the film tab is not a record of
+    // anything.
+    const prefix = `${type.id}-`;
+    const inputs = Object.fromEntries(
+      Object.entries(raw).filter(([k]) => k.startsWith(prefix))
+    );
+    const result = await saveQuote({
+      jobType: type.id,
+      client: job.client,
+      reference: job.reference,
+      description: job.description,
+      issuedOn: job.issuedOn,
+      itemised,
+      inputs,
+    });
+    setSaving(false);
+    setSaved(result.ok ? "Saved to the ledger" : result.error);
+    setTimeout(() => setSaved(null), 4000);
+  };
 
   const copy = async () => {
     try {
@@ -502,12 +523,35 @@ export default function Calculator() {
             </button>
             <button
               type="button"
+              onClick={save}
+              disabled={saving}
+              className="border border-line-strong px-5 py-3 text-label text-ink transition-colors hover:border-accent hover:text-accent disabled:opacity-50"
+            >
+              {saving ? "Saving" : "Save to ledger"}
+            </button>
+            <button
+              type="button"
               onClick={reset}
               className="px-5 py-3 text-label text-ink-faint transition-colors hover:text-ink"
             >
               Reset
             </button>
           </div>
+
+          {saved && (
+            <p role="status" className="no-print mt-4 text-sm text-ink-muted">
+              {saved}
+            </p>
+          )}
+
+          <p className="no-print mt-6 text-sm">
+            <Link
+              href="/quote-calculator/ledger"
+              className="text-label text-ink-faint transition-colors hover:text-ink"
+            >
+              Open the ledger
+            </Link>
+          </p>
         </div>
       </aside>
     </div>
