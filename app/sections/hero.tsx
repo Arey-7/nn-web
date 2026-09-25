@@ -104,7 +104,13 @@ export default function Hero() {
     >
       <HeroCanvas onReady={onReady} onUnsupported={onUnsupported} />
 
-      {webgl !== "ok" && (
+      {/* Only once WebGL is known to have failed, never while it is still
+          starting. Rendering this on "pending" fired sixteen image requests
+          on every cold load and then threw them away a moment later when the
+          canvas took over — sixteen image optimisations a visitor never sees,
+          and on a cold production cache enough held-open connections to stall
+          the next navigation. */}
+      {webgl === "no" && (
         <div
           className="hero-wall pointer-events-none absolute inset-0 -z-10 grid grid-cols-3 gap-3 opacity-22 edge-fade-y md:grid-cols-5 md:gap-4"
           aria-hidden="true"
@@ -121,13 +127,23 @@ export default function Hero() {
               }}
             >
               {[...col, ...col].map((piece, j) => (
-                <Image
+                /* Plain img, not next/image. The tiles are generated at
+                   exactly this size already, so routing them through the
+                   optimiser asks the server to resize 360px files to 360px —
+                   seventy-six times, since the wall repeats each column to
+                   make the drift loop. On a cold cache that queue saturates
+                   the browser's connections to the host and the next
+                   navigation cannot get one. They are decorative, behind a
+                   scrim at 22% opacity, and served straight from disk.
+                   eslint-disable-next-line @next/next/no-img-element */
+                <img
                   key={`${piece.src}-${j}`}
                   src={piece.tile}
                   alt=""
                   width={360}
                   height={Math.round((360 * piece.height) / piece.width)}
-                  sizes="(min-width: 768px) 20vw, 33vw"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full grayscale"
                 />
               ))}
