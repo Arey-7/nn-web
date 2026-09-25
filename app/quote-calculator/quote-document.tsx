@@ -19,9 +19,12 @@ export type Job = {
 export default function QuoteDocument({
   job,
   quote,
+  work,
 }: {
   job: Job;
   quote: Quote;
+  /** The kind of work quoted for, so the client can see what this is about. */
+  work: string;
 }) {
   const rows: [string, string][] = [
     ["Quotation", `${CURRENCY} ${money(quote.quote)}`],
@@ -46,6 +49,7 @@ export default function QuoteDocument({
             ["Prepared for", job.client],
             ["Reference", job.reference],
             ["Date", job.issuedOn],
+            ["Work", work],
           ] as const
         ).map(([label, value]) => (
           <div key={label}>

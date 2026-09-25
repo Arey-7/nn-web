@@ -4,38 +4,50 @@ import { useEffect, useMemo, useState } from "react";
 import { SITE } from "../content/site";
 import QuoteDocument, { type Job } from "./quote-document";
 import {
-  ALL_FIELDS,
   CURRENCY,
-  EMPTY,
-  FLAT_FIELDS,
+  JOB_TYPES,
   MARGIN,
-  QUANTITY_FIELDS,
   ROUND_TO,
-  UNIT_FIELDS,
+  fieldsOf,
+  jobById,
   money,
   priceJob,
+  valueKey,
   type FieldSpec,
-  type Inputs,
+  type JobType,
+  type Values,
 } from "./pricing";
 
 const STORE = "rr-quote";
 
-type Raw = Record<keyof Inputs, string>;
+type Raw = Record<string, string>;
 
-/** Inputs are held as the raw strings the fields contain, and parsed only to
- *  compute. Keeping numbers in state was what broke the old tool: clearing a
- *  field left an empty string behind, and one `number + ""` turned the running
- *  total into a string that quietly lost its thousands separators. */
-const blankRaw = (): Raw =>
-  Object.fromEntries(
-    ALL_FIELDS.map((f) => [f.name, EMPTY[f.name] ? String(EMPTY[f.name]) : ""]),
-  ) as Raw;
+/**
+ * Inputs are held as the raw strings the fields contain and parsed only to
+ * compute. Keeping numbers in state was what broke the tool this replaced:
+ * clearing a field left an empty string behind, and one `number + ""` turned
+ * the running total into a string that quietly lost its separators.
+ *
+ * Keys are namespaced by job type, so pricing a film job and then going back
+ * to a print one finds the print figures still there.
+ */
+const blankRaw = (): Raw => {
+  const out: Raw = {};
+  for (const job of JOB_TYPES) {
+    for (const field of fieldsOf(job)) {
+      out[valueKey(job.id, field.key)] = field.default
+        ? String(field.default)
+        : "";
+    }
+  }
+  return out;
+};
 
 /** Local calendar date, not UTC — a Nairobi evening is already tomorrow in UTC. */
 const today = () => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
-    d.getDate(),
+    d.getDate()
   ).padStart(2, "0")}`;
 };
 
@@ -47,11 +59,13 @@ const blankJob = (): Job => ({
 });
 
 function NumberField({
+  id,
   field,
   value,
   invalid,
   onChange,
 }: {
+  id: string;
   field: FieldSpec;
   value: string;
   invalid: boolean;
@@ -59,12 +73,12 @@ function NumberField({
 }) {
   return (
     <div>
-      <label htmlFor={field.name} className="text-label block text-ink-muted">
+      <label htmlFor={id} className="text-label block text-ink-muted">
         {field.label}
       </label>
       <input
-        id={field.name}
-        name={field.name}
+        id={id}
+        name={id}
         type="number"
         min={0}
         step="any"
@@ -130,6 +144,7 @@ function TextField({
 function Group({
   title,
   note,
+  jobId,
   fields,
   raw,
   negatives,
@@ -137,46 +152,60 @@ function Group({
 }: {
   title: string;
   note: string;
+  jobId: string;
   fields: FieldSpec[];
   raw: Raw;
   negatives: Set<string>;
-  set: (name: keyof Inputs, v: string) => void;
+  set: (key: string, v: string) => void;
 }) {
+  if (fields.length === 0) return null;
   return (
-    <fieldset className="mt-12 first:mt-0">
+    <fieldset className="mt-12">
       <legend className="text-label text-ink-faint">{title}</legend>
       <p className="mb-8 mt-2 text-sm text-ink-faint">{note}</p>
       <div className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
-        {fields.map((f) => (
-          <NumberField
-            key={f.name}
-            field={f}
-            value={raw[f.name]}
-            invalid={negatives.has(f.name)}
-            onChange={(v) => set(f.name, v)}
-          />
-        ))}
+        {fields.map((f) => {
+          const key = valueKey(jobId, f.key);
+          return (
+            <NumberField
+              key={key}
+              id={key}
+              field={f}
+              value={raw[key] ?? ""}
+              invalid={negatives.has(key)}
+              onChange={(v) => set(key, v)}
+            />
+          );
+        })}
       </div>
     </fieldset>
   );
 }
 
 export default function Calculator() {
+  const [jobId, setJobId] = useState(JOB_TYPES[0].id);
   const [raw, setRaw] = useState<Raw>(blankRaw);
   const [job, setJob] = useState<Job>(blankJob);
   const [ready, setReady] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  const type: JobType = jobById(jobId);
+
   // Restored after mount, never during render: reading storage while rendering
   // would make the server and client trees disagree.
   useEffect(() => {
-    let saved: { raw?: Partial<Raw>; job?: Partial<Job> } | null = null;
+    let saved: { raw?: Raw; job?: Partial<Job>; jobId?: string } | null = null;
     try {
       saved = JSON.parse(localStorage.getItem(STORE) || "null");
     } catch {
       saved = null;
     }
+    // Merged onto a blank set rather than used as-is, so a draft saved before a
+    // job type gained a field still opens.
     if (saved?.raw) setRaw((r) => ({ ...r, ...saved.raw }));
+    if (saved?.jobId && JOB_TYPES.some((j) => j.id === saved.jobId)) {
+      setJobId(saved.jobId);
+    }
     setJob((j) => ({
       ...j,
       ...(saved?.job ?? {}),
@@ -188,41 +217,39 @@ export default function Calculator() {
   useEffect(() => {
     if (!ready) return;
     try {
-      localStorage.setItem(STORE, JSON.stringify({ raw, job }));
+      localStorage.setItem(STORE, JSON.stringify({ raw, job, jobId }));
     } catch {
-      /* private browsing, a full quota — the tool still works, it just forgets */
+      /* private browsing, a full quota — the tool works, it just forgets */
     }
-  }, [ready, raw, job]);
+  }, [ready, raw, job, jobId]);
+
+  const fields = useMemo(() => fieldsOf(type), [type]);
 
   const negatives = useMemo(
     () =>
       new Set(
-        ALL_FIELDS.filter((f) => parseFloat(raw[f.name]) < 0).map(
-          (f) => f.name,
-        ),
+        fields
+          .map((f) => valueKey(type.id, f.key))
+          .filter((k) => parseFloat(raw[k]) < 0)
       ),
-    [raw],
+    [fields, type.id, raw]
   );
 
   const values = useMemo(() => {
-    const out = { ...EMPTY };
-    for (const f of ALL_FIELDS) {
-      const n = parseFloat(raw[f.name]);
-      out[f.name] = Number.isFinite(n) ? Math.max(0, n) : 0;
+    const out: Values = {};
+    for (const f of fields) {
+      const n = parseFloat(raw[valueKey(type.id, f.key)]);
+      out[f.key] = Number.isFinite(n) ? Math.max(0, n) : 0;
     }
     return out;
-  }, [raw]);
+  }, [fields, type.id, raw]);
 
-  const q = useMemo(() => priceJob(values), [values]);
+  const q = useMemo(() => priceJob(type, values), [type, values]);
 
-  const set = (name: keyof Inputs, v: string) =>
-    setRaw((r) => ({ ...r, [name]: v }));
+  const set = (key: string, v: string) => setRaw((r) => ({ ...r, [key]: v }));
 
   const reset = () => {
     setRaw(blankRaw());
-    // No need to clear storage: the save effect writes the blank state back
-    // on the very next render, which is the same outcome with one less way to
-    // get out of step.
     setJob({ ...blankJob(), issuedOn: today() });
   };
 
@@ -233,8 +260,7 @@ export default function Calculator() {
       `Prepared for: ${job.client || "—"}`,
       `Reference:    ${job.reference || "—"}`,
       `Date:         ${job.issuedOn || "—"}`,
-      // Spread rather than filtered, so the blank lines that separate the
-      // sections survive and only the description drops out when unset.
+      `Work:         ${type.label}`,
       ...(job.description ? ["", job.description] : []),
       "",
       `Quotation:     ${CURRENCY} ${money(q.quote)}`,
@@ -264,7 +290,37 @@ export default function Calculator() {
   return (
     <div className="mx-auto mt-14 grid max-w-[1600px] gap-14 px-6 md:px-10 lg:grid-cols-12">
       <div className="no-print lg:col-span-7">
-        <form onSubmit={(e) => e.preventDefault()}>
+        <div>
+          <p className="text-label text-ink-faint">Kind of work</p>
+          <div
+            role="tablist"
+            aria-label="Kind of work"
+            className="mt-5 flex flex-wrap gap-2"
+          >
+            {JOB_TYPES.map((t) => {
+              const on = t.id === type.id;
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={on}
+                  onClick={() => setJobId(t.id)}
+                  className={`border px-4 py-2.5 text-label transition-colors ${
+                    on
+                      ? "border-accent text-accent"
+                      : "border-line-strong text-ink-muted hover:border-ink hover:text-ink"
+                  }`}
+                >
+                  {t.label}
+                </button>
+              );
+            })}
+          </div>
+          <p className="mt-4 text-sm text-ink-faint">{type.note}</p>
+        </div>
+
+        <form className="mt-12" onSubmit={(e) => e.preventDefault()}>
           <fieldset>
             <legend className="text-label text-ink-faint">The job</legend>
             <p className="mb-8 mt-2 text-sm text-ink-faint">
@@ -304,8 +360,9 @@ export default function Calculator() {
 
           <Group
             title="Quantities"
-            note="How many of each. Printing defaults to a single run."
-            fields={QUANTITY_FIELDS}
+            note="How many of each."
+            jobId={type.id}
+            fields={type.quantities}
             raw={raw}
             negatives={negatives}
             set={set}
@@ -313,7 +370,8 @@ export default function Calculator() {
           <Group
             title="Unit costs"
             note="What one of each costs. Multiplied by the quantities above."
-            fields={UNIT_FIELDS}
+            jobId={type.id}
+            fields={type.units}
             raw={raw}
             negatives={negatives}
             set={set}
@@ -321,7 +379,8 @@ export default function Calculator() {
           <Group
             title="Flat costs"
             note="Charged once, whatever the quantities."
-            fields={FLAT_FIELDS}
+            jobId={type.id}
+            fields={type.flats}
             raw={raw}
             negatives={negatives}
             set={set}
@@ -343,7 +402,7 @@ export default function Calculator() {
             Internal working
           </h2>
           <p className="mt-2 text-sm text-ink-faint">
-            Not shown on the quote above, and not printed.
+            Not shown on the quote, and not printed.
           </p>
 
           <dl className="mt-7 divide-y divide-line border-y border-line">
@@ -385,10 +444,10 @@ export default function Calculator() {
       <aside className="lg:col-span-5">
         <div className="quote-sticky lg:sticky lg:top-24">
           <p className="sr-only" aria-live="polite">
-            Total payable {CURRENCY} {money(q.payable)}
+            {type.label}. Total payable {CURRENCY} {money(q.payable)}
           </p>
 
-          <QuoteDocument job={job} quote={q} />
+          <QuoteDocument job={job} quote={q} work={type.label} />
 
           <div className="no-print mt-6 flex flex-wrap gap-3">
             <button
