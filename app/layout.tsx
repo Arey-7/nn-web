@@ -9,6 +9,7 @@ import ThemeButton from "./components/theme-button";
 import SmoothScroll from "./lib/smooth-scroll";
 import Cursor from "./components/cursor";
 import Preloader from "./components/preloader";
+import PublicOnly from "./components/public-only";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -59,7 +60,9 @@ export default function RootLayout({
           <Navbar />
           <main id="main">{children}</main>
           <ThemeButton />
-          <Footer />
+          <PublicOnly>
+            <Footer />
+          </PublicOnly>
         </Providers>
       </body>
     </html>
