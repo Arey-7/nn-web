@@ -48,7 +48,7 @@ function Card({ campaign }: { campaign: Campaign }) {
               alt=""
               fill
               sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-              className={`transition-transform duration-[1200ms] ease-out-expo group-hover:scale-[1.04] ${
+              className={`transition-transform duration-1200 ease-out-expo group-hover:scale-104 ${
                 // Press work is never cropped — a headline cut in half is a
                 // worse sin here than a little letterboxing.
                 campaign.medium === "film"

@@ -113,7 +113,7 @@ export default function RadioRoom() {
 
   return (
     <section aria-labelledby="radio-heading" className="bg-paper py-28">
-      <div className="mx-auto max-w-[1600px] px-6 md:px-10">
+      <div className="mx-auto max-w-400 px-6 md:px-10">
         <div className="flex items-baseline justify-between border-b border-line pb-6">
           <h2 id="radio-heading" className="text-label text-ink-faint">
             Radio

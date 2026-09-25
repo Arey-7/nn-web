@@ -35,7 +35,7 @@ export default async function QuoteCalculatorPage() {
           title="Quote calculator"
           lede="Pick the kind of work, put the costs in on the left, and the client's quote builds on the right. Cost plus 35%, rounded up to the nearest 200, with VAT on top. Figures update as you type and are kept on this device."
         />
-        <div className="mx-auto mt-8 flex max-w-[1600px] justify-end px-6 md:px-10">
+        <div className="mx-auto mt-8 flex max-w-400 justify-end px-6 md:px-10">
           <SignOutButton />
         </div>
       </div>

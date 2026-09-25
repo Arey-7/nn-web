@@ -32,7 +32,7 @@ export default function CampaignMedia({ campaign }: { campaign: Campaign }) {
                     alt=""
                     fill
                     sizes="(min-width: 768px) 50vw, 100vw"
-                    className="object-cover transition-transform duration-[1200ms] ease-out-expo group-hover:scale-[1.03]"
+                    className="object-cover transition-transform duration-1200 ease-out-expo group-hover:scale-103"
                   />
                   <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                   <span className="absolute left-1/2 top-1/2 grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-white/40 bg-black/30 text-white backdrop-blur-sm transition-transform duration-500 ease-out-expo group-hover:scale-110">

@@ -31,7 +31,7 @@ export default async function LedgerPage() {
     return (
       <div className="pb-32">
         <PageHeader eyebrow="Internal tool" title="Quote ledger" lede="" />
-        <div className="mx-auto max-w-[1600px] px-6 md:px-10">
+        <div className="mx-auto max-w-400 px-6 md:px-10">
           <p className="max-w-lg border border-line px-5 py-4 text-sm text-ink-muted">
             No ledger database is configured. Set{" "}
             <code className="text-ink">DATABASE_URL</code> in the environment
@@ -52,7 +52,7 @@ export default async function LedgerPage() {
         lede="Every quote saved from the calculator, newest first. The figures are the ones quoted at the time, kept with the rules that produced them."
       />
 
-      <div className="mx-auto mt-14 max-w-[1600px] px-6 md:px-10">
+      <div className="mx-auto mt-14 max-w-400 px-6 md:px-10">
         <div className="flex flex-wrap items-baseline justify-between gap-6 border-b border-line pb-6">
           <p className="text-label text-ink-faint">
             {sum.count} {sum.count === 1 ? "quote" : "quotes"}

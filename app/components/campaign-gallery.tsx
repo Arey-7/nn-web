@@ -52,7 +52,7 @@ export default function CampaignGallery({ campaign, onClose }: Props) {
         </button>
       </div>
 
-      <div className="mx-auto max-w-[1200px] px-6 py-14 md:px-10">
+      <div className="mx-auto max-w-300 px-6 py-14 md:px-10">
         <blockquote className="text-display text-[clamp(1.8rem,4.4vw,3.6rem)] text-ink">
           {campaign.headline}
         </blockquote>

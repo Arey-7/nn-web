@@ -9,7 +9,7 @@ export default function Gate({ configured }: { configured: boolean }) {
   const [state, formAction, pending] = useActionState(signIn, INITIAL);
 
   return (
-    <div className="mx-auto flex min-h-[70svh] max-w-[1600px] items-center px-6 md:px-10">
+    <div className="mx-auto flex min-h-[70svh] max-w-400 items-center px-6 md:px-10">
       <div className="w-full max-w-md">
         <p className="text-label text-ink-faint">Internal</p>
         <h1 className="mt-5 text-display text-[clamp(2rem,4.5vw,3.25rem)] text-ink">

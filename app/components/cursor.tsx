@@ -100,7 +100,7 @@ export default function Cursor() {
       </div>
       <div
         ref={dot}
-        className="absolute -left-[3px] -top-[3px] h-1.5 w-1.5 rounded-full bg-white"
+        className="absolute -left-0.75 -top-0.75 h-1.5 w-1.5 rounded-full bg-white"
       />
     </div>
   );

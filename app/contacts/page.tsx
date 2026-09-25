@@ -29,7 +29,7 @@ export default function ContactsPage() {
         lede="The useful first conversation is rarely about us. Send the problem, the deadline and the budget you actually have, and we will tell you honestly whether we are the right people."
       />
 
-      <div className="mx-auto mt-20 grid max-w-[1600px] gap-16 px-6 md:px-10 lg:grid-cols-12">
+      <div className="mx-auto mt-20 grid max-w-400 gap-16 px-6 md:px-10 lg:grid-cols-12">
         <section className="lg:col-span-7">
           <h2 className="text-label text-ink-faint">Write to us</h2>
           <a

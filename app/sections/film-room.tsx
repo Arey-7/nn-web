@@ -163,7 +163,7 @@ export default function FilmRoom() {
       }`}
     >
       <div
-        className={`mx-auto w-full max-w-[1600px] shrink-0 px-6 md:px-10 ${
+        className={`mx-auto w-full max-w-400 shrink-0 px-6 md:px-10 ${
           rail ? "pt-24" : ""
         }`}
       >
@@ -194,7 +194,7 @@ export default function FilmRoom() {
           className={
             rail
               ? "flex w-max gap-10 px-6 will-change-transform md:px-10"
-              : "mx-auto mt-16 grid max-w-[1600px] gap-x-8 gap-y-14 px-6 sm:grid-cols-2 md:px-10 lg:grid-cols-3"
+              : "mx-auto mt-16 grid max-w-400 gap-x-8 gap-y-14 px-6 sm:grid-cols-2 md:px-10 lg:grid-cols-3"
           }
         >
           {ENTRIES.map((entry, i) => (

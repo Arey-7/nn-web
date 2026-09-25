@@ -23,7 +23,7 @@ export default function ProjectsPage() {
         lede="Every campaign we can still put our hands on — the press pages, the television, and the radio nobody keeps."
       />
 
-      <div className="mx-auto max-w-[1600px] px-6 md:px-10">
+      <div className="mx-auto max-w-400 px-6 md:px-10">
         <WorkIndex />
       </div>
     </div>

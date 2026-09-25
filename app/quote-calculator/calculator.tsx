@@ -324,7 +324,7 @@ export default function Calculator() {
   ];
 
   return (
-    <div className="mx-auto mt-14 grid max-w-[1600px] gap-14 px-6 md:px-10 lg:grid-cols-12">
+    <div className="mx-auto mt-14 grid max-w-400 gap-14 px-6 md:px-10 lg:grid-cols-12">
       <div className="no-print lg:col-span-7">
         <div>
           <p className="text-label text-ink-faint">Kind of work</p>

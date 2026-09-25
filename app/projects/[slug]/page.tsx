@@ -33,7 +33,7 @@ export default async function CampaignPage({ params }: Params) {
 
   return (
     <article className="pb-32">
-      <header className="mx-auto max-w-[1600px] px-6 pt-36 md:px-10 md:pt-44">
+      <header className="mx-auto max-w-400 px-6 pt-36 md:px-10 md:pt-44">
         <Link
           href="/projects"
           className="text-label text-ink-faint transition-colors hover:text-accent"
@@ -61,7 +61,7 @@ export default async function CampaignPage({ params }: Params) {
         </p>
       </header>
 
-      <div className="mx-auto mt-20 max-w-[1600px] px-6 md:px-10">
+      <div className="mx-auto mt-20 max-w-400 px-6 md:px-10">
         {print.length > 0 && (
           <ul className="space-y-24">
             {print.map((piece, i) => (
@@ -73,11 +73,11 @@ export default async function CampaignPage({ params }: Params) {
                     width={piece.width}
                     height={piece.height}
                     sizes="(min-width: 1280px) 1100px, 100vw"
-                    className="mx-auto h-auto w-full max-w-[1100px]"
+                    className="mx-auto h-auto w-full max-w-275"
                     priority={i === 0}
                   />
                   {piece.line && (
-                    <figcaption className="mx-auto mt-6 max-w-[1100px] text-lg italic text-ink-muted">
+                    <figcaption className="mx-auto mt-6 max-w-275 text-lg italic text-ink-muted">
                       &ldquo;{piece.line}&rdquo;
                     </figcaption>
                   )}
@@ -90,7 +90,7 @@ export default async function CampaignPage({ params }: Params) {
         <CampaignMedia campaign={campaign} />
       </div>
 
-      <nav className="mx-auto mt-32 max-w-[1600px] border-t border-line px-6 pt-10 md:px-10">
+      <nav className="mx-auto mt-32 max-w-400 border-t border-line px-6 pt-10 md:px-10">
         <p className="text-label text-ink-faint">Next campaign</p>
         <Link href={`/projects/${next.slug}`} className="group mt-5 block">
           <p className="text-label text-ink-muted">{next.client}</p>

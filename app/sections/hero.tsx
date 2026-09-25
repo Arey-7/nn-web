@@ -106,7 +106,7 @@ export default function Hero() {
 
       {webgl !== "ok" && (
         <div
-          className="hero-wall pointer-events-none absolute inset-0 -z-10 grid grid-cols-3 gap-3 opacity-[0.22] edge-fade-y md:grid-cols-5 md:gap-4"
+          className="hero-wall pointer-events-none absolute inset-0 -z-10 grid grid-cols-3 gap-3 opacity-22 edge-fade-y md:grid-cols-5 md:gap-4"
           aria-hidden="true"
         >
           {columns.map((col, i) => (
@@ -148,7 +148,7 @@ export default function Hero() {
       />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-paper-sunk to-transparent" />
 
-      <div className="mx-auto w-full max-w-[1600px] px-6 md:px-10">
+      <div className="mx-auto w-full max-w-400 px-6 md:px-10">
         <h1 className="hero-type text-display text-[clamp(2.9rem,10.5vw,10.5rem)] text-ink">
           {LINES.map((line) => (
             <span key={line} className="block overflow-hidden py-[0.02em]">

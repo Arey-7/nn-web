@@ -43,7 +43,7 @@ export default function AboutPage() {
         lede="Reef Rooster is an advertising agency in Nairobi. We write press, film and radio for organisations that have something worth saying and a reason for saying it now."
       />
 
-      <section className="mx-auto mt-24 max-w-[1600px] px-6 md:px-10">
+      <section className="mx-auto mt-24 max-w-400 px-6 md:px-10">
         <div className="grid gap-x-8 gap-y-14 border-t border-line pt-14 md:grid-cols-3">
           {BELIEFS.map((belief, i) => (
             <div key={belief.title}>
@@ -63,7 +63,7 @@ export default function AboutPage() {
 
       <section
         aria-labelledby="disciplines"
-        className="mx-auto mt-28 max-w-[1600px] px-6 md:px-10"
+        className="mx-auto mt-28 max-w-400 px-6 md:px-10"
       >
         <h2 id="disciplines" className="text-label text-ink-faint">
           What we work on
@@ -82,7 +82,7 @@ export default function AboutPage() {
 
       <section
         aria-labelledby="clients"
-        className="mx-auto mt-28 max-w-[1600px] px-6 md:px-10"
+        className="mx-auto mt-28 max-w-400 px-6 md:px-10"
       >
         <h2 id="clients" className="text-label text-ink-faint">
           Clients
@@ -96,7 +96,7 @@ export default function AboutPage() {
         </ul>
       </section>
 
-      <section className="mx-auto mt-28 max-w-[1600px] px-6 md:px-10">
+      <section className="mx-auto mt-28 max-w-400 px-6 md:px-10">
         <Link
           href="/projects"
           className="group inline-flex items-baseline gap-5 text-display text-[clamp(1.9rem,5vw,4rem)] text-ink"

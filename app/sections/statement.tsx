@@ -36,7 +36,7 @@ export default function Statement() {
 
   return (
     <section ref={root} className="bg-paper py-32 md:py-48">
-      <div className="mx-auto max-w-[1300px] px-6 md:px-10">
+      <div className="mx-auto max-w-325 px-6 md:px-10">
         <p className="text-display text-[clamp(1.9rem,5.2vw,4.75rem)]">
           {COPY.split(" ").map((word, i) => (
             <span

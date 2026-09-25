@@ -62,7 +62,7 @@ export default function FeaturedWork() {
 
   return (
     <section aria-labelledby="work-heading" className="bg-paper">
-      <div className="mx-auto max-w-[1600px] px-6 pt-28 md:px-10">
+      <div className="mx-auto max-w-400 px-6 pt-28 md:px-10">
         <div className="flex items-baseline justify-between border-b border-line pb-6">
           <h2 id="work-heading" className="text-label text-ink-faint">
             Selected work
@@ -79,7 +79,7 @@ export default function FeaturedWork() {
             ref={pinned}
             className="flex min-h-svh items-center overflow-hidden"
           >
-            <div className="mx-auto grid w-full max-w-[1600px] grid-cols-12 items-center gap-12 px-10">
+            <div className="mx-auto grid w-full max-w-400 grid-cols-12 items-center gap-12 px-10">
               <div className="relative col-span-5">
                 {FEATURED.map((c, i) => (
                   <div
@@ -163,7 +163,7 @@ export default function FeaturedWork() {
           </div>
         </div>
       ) : (
-        <ul className="mx-auto max-w-[1600px] divide-y divide-line px-6 md:px-10">
+        <ul className="mx-auto max-w-400 divide-y divide-line px-6 md:px-10">
           {FEATURED.map((c, i) => {
             const piece = hero(c);
             return (

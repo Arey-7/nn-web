@@ -9,7 +9,7 @@ type Props = {
 /** Top of every inner page. The padding clears the fixed navbar. */
 export default function PageHeader({ eyebrow, title, lede }: Props) {
   return (
-    <header className="mx-auto max-w-[1600px] px-6 pb-4 pt-36 md:px-10 md:pt-44">
+    <header className="mx-auto max-w-400 px-6 pb-4 pt-36 md:px-10 md:pt-44">
       <p className="text-label text-ink-faint">{eyebrow}</p>
       <h1 className="mt-6 text-display text-[clamp(2.6rem,8vw,7rem)] text-ink">
         {title}
