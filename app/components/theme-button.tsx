@@ -17,7 +17,7 @@ export default function ThemeButton() {
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
-      className="fixed bottom-8 right-6 z-40 grid h-12 w-12 place-items-center rounded-full border border-line-strong bg-paper-raised text-ink shadow-lg transition-colors duration-300 hover:border-accent hover:text-accent"
+      className="no-print fixed bottom-8 right-6 z-40 grid h-12 w-12 place-items-center rounded-full border border-line-strong bg-paper-raised text-ink shadow-lg transition-colors duration-300 hover:border-accent hover:text-accent"
     >
       <svg
         viewBox="0 0 24 24"

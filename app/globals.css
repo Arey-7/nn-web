@@ -259,3 +259,58 @@ html:not(.dark) [data-webgl="hero"] {
     scroll-behavior: auto !important;
   }
 }
+
+/* ---------------------------------------------------------------
+   Print. The quote calculator is the only page meant to be printed,
+   and only the client-facing document on it: cost, profit, margin
+   and tithe live outside `.quote-doc` and must never come out of a
+   printer. Everything is hidden and the document alone is shown back,
+   so anything added to the page later is excluded by default.
+   --------------------------------------------------------------- */
+
+@media print {
+  /* The dark theme would otherwise lay a black field over the whole sheet. */
+  html,
+  body {
+    background: #ffffff !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .quote-doc,
+  .quote-doc * {
+    visibility: visible;
+    /* The theme's ink can be near-white. Paper is not. */
+    color: #000 !important;
+    border-color: #9a9a9a !important;
+    background: transparent !important;
+  }
+
+  /* Lifted out of the page grid so it prints full width rather than in the
+     right-hand column it occupies on screen. */
+  .quote-doc {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border: 0;
+    padding: 0;
+    background: #ffffff !important;
+  }
+
+  /* An absolutely positioned box is placed against its nearest positioned
+     ancestor, and on screen that is the sticky column — which would pin the
+     document to wherever the column happened to be scrolled to. */
+  .quote-sticky {
+    position: static !important;
+  }
+
+  .no-print,
+  [data-print="hide"],
+  .grain::after,
+  [data-webgl] {
+    display: none !important;
+  }
+}

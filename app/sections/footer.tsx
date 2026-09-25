@@ -3,7 +3,7 @@ import { SITE } from "../content/site";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-line bg-paper">
+    <footer className="no-print border-t border-line bg-paper">
       <div className="mx-auto max-w-[1600px] px-6 md:px-10">
         <div className="grid gap-16 py-20 md:grid-cols-12 md:py-28">
           <div className="md:col-span-7">

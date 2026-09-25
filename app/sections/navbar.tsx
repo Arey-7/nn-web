@@ -75,6 +75,7 @@ export default function Navbar() {
       </a>
 
       <header
+        data-print="hide"
         className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
           scrolled && !open
             ? "border-b border-line bg-paper/80 backdrop-blur-md"
