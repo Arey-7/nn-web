@@ -87,7 +87,7 @@ export default function Cursor() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-[100] mix-blend-difference"
+      className="pointer-events-none fixed inset-0 z-100 mix-blend-difference"
     >
       <div
         ref={ring}

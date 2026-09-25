@@ -78,7 +78,7 @@ export default function Preloader() {
     <div
       ref={root}
       aria-hidden="true"
-      className="fixed inset-0 z-[120] overflow-hidden"
+      className="fixed inset-0 z-120 overflow-hidden"
     >
       <div className="absolute inset-0 flex">
         {Array.from({ length: SLATS }).map((_, i) => (
