@@ -251,3 +251,40 @@ export function priceJob(job: JobType, v: Values): Quote {
     tithe: Math.round(profit * TITHE_RATE),
   };
 }
+
+export type PricedLine = { label: string; amount: number };
+
+/**
+ * The client's version of the breakdown.
+ *
+ * It must never be built from `Quote.lines`: those are costs, and a client who
+ * adds them up next to the quoted figure has just been handed the margin. Each
+ * line is carried up to its share of the quoted price instead, and the unit
+ * rates and quantities are left behind — what a crew day costs the agency is
+ * not the client's business, but what the crew comes to on their invoice is.
+ *
+ * The shares are allocated by largest remainder rather than rounded one by
+ * one. Rounding each line independently leaves the column a shilling or two
+ * off the total, and a quote whose own numbers do not add up is worse than no
+ * breakdown at all. Lines costing nothing are dropped rather than printed as
+ * zeroes.
+ */
+export function quotedLines(q: Quote): PricedLine[] {
+  const billable = q.lines.filter((l) => l.amount > 0);
+  if (billable.length === 0 || q.total <= 0 || q.quote <= 0) return [];
+
+  const exact = billable.map((l) => (l.amount * q.quote) / q.total);
+  const amounts = exact.map(Math.floor);
+
+  // Whatever the flooring dropped, handed out to the largest fractions first.
+  let left = q.quote - amounts.reduce((a, b) => a + b, 0);
+  const byFraction = exact
+    .map((e, i) => ({ i, fraction: e - Math.floor(e) }))
+    .sort((a, b) => b.fraction - a.fraction);
+
+  for (let k = 0; left > 0; k++, left--) {
+    amounts[byFraction[k % byFraction.length].i] += 1;
+  }
+
+  return billable.map((l, i) => ({ label: l.label, amount: amounts[i] }));
+}

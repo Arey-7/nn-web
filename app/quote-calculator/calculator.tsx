@@ -12,6 +12,7 @@ import {
   jobById,
   money,
   priceJob,
+  quotedLines,
   valueKey,
   type FieldSpec,
   type JobType,
@@ -188,13 +189,22 @@ export default function Calculator() {
   const [job, setJob] = useState<Job>(blankJob);
   const [ready, setReady] = useState(false);
   const [copied, setCopied] = useState(false);
+  // On by default: the clients in this portfolio are largely public sector,
+  // where an itemised quotation is usually what procurement needs to approve
+  // the spend at all. The figures shown are prices, so nothing is given away.
+  const [itemised, setItemised] = useState(true);
 
   const type: JobType = jobById(jobId);
 
   // Restored after mount, never during render: reading storage while rendering
   // would make the server and client trees disagree.
   useEffect(() => {
-    let saved: { raw?: Raw; job?: Partial<Job>; jobId?: string } | null = null;
+    let saved: {
+      raw?: Raw;
+      job?: Partial<Job>;
+      jobId?: string;
+      itemised?: boolean;
+    } | null = null;
     try {
       saved = JSON.parse(localStorage.getItem(STORE) || "null");
     } catch {
@@ -206,6 +216,7 @@ export default function Calculator() {
     if (saved?.jobId && JOB_TYPES.some((j) => j.id === saved.jobId)) {
       setJobId(saved.jobId);
     }
+    if (typeof saved?.itemised === "boolean") setItemised(saved.itemised);
     setJob((j) => ({
       ...j,
       ...(saved?.job ?? {}),
@@ -217,11 +228,11 @@ export default function Calculator() {
   useEffect(() => {
     if (!ready) return;
     try {
-      localStorage.setItem(STORE, JSON.stringify({ raw, job, jobId }));
+      localStorage.setItem(STORE, JSON.stringify({ raw, job, jobId, itemised }));
     } catch {
       /* private browsing, a full quota — the tool works, it just forgets */
     }
-  }, [ready, raw, job, jobId]);
+  }, [ready, raw, job, jobId, itemised]);
 
   const fields = useMemo(() => fieldsOf(type), [type]);
 
@@ -263,6 +274,11 @@ export default function Calculator() {
       `Work:         ${type.label}`,
       ...(job.description ? ["", job.description] : []),
       "",
+      ...(itemised
+        ? quotedLines(q).map(
+            (l) => `${l.label.padEnd(30)} ${CURRENCY} ${money(l.amount)}`
+          )
+        : []),
       `Quotation:     ${CURRENCY} ${money(q.quote)}`,
       `VAT at 16%:    ${CURRENCY} ${money(q.vat)}`,
       `Total payable: ${CURRENCY} ${money(q.payable)}`,
@@ -447,7 +463,28 @@ export default function Calculator() {
             {type.label}. Total payable {CURRENCY} {money(q.payable)}
           </p>
 
-          <QuoteDocument job={job} quote={q} work={type.label} />
+          <QuoteDocument
+            job={job}
+            quote={q}
+            work={type.label}
+            itemised={itemised}
+          />
+
+          <label className="no-print mt-6 flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              checked={itemised}
+              onChange={(e) => setItemised(e.target.checked)}
+              className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--accent)]"
+            />
+            <span className="text-sm text-ink-muted">
+              Break the quotation into line items.{" "}
+              <span className="text-ink-faint">
+                Shows what each part is being charged at, never what it costs
+                us.
+              </span>
+            </span>
+          </label>
 
           <div className="no-print mt-6 flex flex-wrap gap-3">
             <button

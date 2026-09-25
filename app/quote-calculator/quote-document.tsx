@@ -1,5 +1,5 @@
 import { SITE } from "../content/site";
-import { CURRENCY, money, type Quote } from "./pricing";
+import { CURRENCY, money, quotedLines, type Quote } from "./pricing";
 
 export type Job = {
   client: string;
@@ -20,16 +20,17 @@ export default function QuoteDocument({
   job,
   quote,
   work,
+  itemised,
 }: {
   job: Job;
   quote: Quote;
   /** The kind of work quoted for, so the client can see what this is about. */
   work: string;
+  /** Whether the client sees the quotation broken into its parts. */
+  itemised: boolean;
 }) {
-  const rows: [string, string][] = [
-    ["Quotation", `${CURRENCY} ${money(quote.quote)}`],
-    ["VAT at 16%", `${CURRENCY} ${money(quote.vat)}`],
-  ];
+  // Priced lines, never the cost lines: see quotedLines().
+  const lines = itemised ? quotedLines(quote) : [];
 
   return (
     <article className="quote-doc border border-line bg-paper-raised p-8 md:p-10">
@@ -66,15 +67,33 @@ export default function QuoteDocument({
       )}
 
       <dl className="mt-9 border-t border-line">
-        {rows.map(([label, value]) => (
+        {lines.map((line) => (
           <div
-            key={label}
-            className="flex items-baseline justify-between gap-6 border-b border-line py-4"
+            key={line.label}
+            className="flex items-baseline justify-between gap-6 border-b border-line py-3"
           >
-            <dt className="text-ink-muted">{label}</dt>
-            <dd className="tabular-nums text-ink">{value}</dd>
+            <dt className="text-ink-muted">{line.label}</dt>
+            <dd className="tabular-nums text-ink-muted">
+              {CURRENCY} {money(line.amount)}
+            </dd>
           </div>
         ))}
+
+        <div className="flex items-baseline justify-between gap-6 border-b border-line py-4">
+          <dt className={lines.length ? "text-ink" : "text-ink-muted"}>
+            {lines.length ? "Quotation, total" : "Quotation"}
+          </dt>
+          <dd className="tabular-nums text-ink">
+            {CURRENCY} {money(quote.quote)}
+          </dd>
+        </div>
+
+        <div className="flex items-baseline justify-between gap-6 border-b border-line py-4">
+          <dt className="text-ink-muted">VAT at 16%</dt>
+          <dd className="tabular-nums text-ink">
+            {CURRENCY} {money(quote.vat)}
+          </dd>
+        </div>
         <div className="flex items-baseline justify-between gap-6 py-5">
           <dt className="text-label text-ink">Total payable</dt>
           <dd className="text-display whitespace-nowrap text-2xl tabular-nums text-accent sm:text-3xl">
