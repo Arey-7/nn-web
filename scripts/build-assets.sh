@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
 #
-# Generates web derivatives from the originals in public/ads into public/w.
-# Idempotent: existing outputs are skipped, so reruns are cheap and adding a
-# single new campaign does not re-encode the whole library.
+# Generates web derivatives from the masters in assets-source/ads into
+# public/w. Idempotent: existing outputs are skipped, so reruns are cheap and
+# adding a single campaign does not re-encode the whole library.
 #
 #   npm run assets            # build everything missing
 #   FORCE=1 npm run assets    # rebuild from scratch
 #
-# Requires ffmpeg and sips (macOS).
+# Requires ffmpeg and ffprobe, and nothing else. This used to reach for sips
+# to handle the stills, which meant the pipeline only ran on a Mac and any
+# Linux build host failed outright. ffmpeg was already here for the films.
 
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SRC="$ROOT/public/ads"
+SRC="$ROOT/assets-source/ads"
 OUT="$ROOT/public/w"
 
 PRINT_MAX=1800   # long edge of the full-size web image
@@ -22,41 +24,56 @@ FILM_W=960       # film is SD-mastered; never upscale past this
 LOOP_W=768
 LOOP_SECS=6
 
+for tool in ffmpeg ffprobe; do
+  command -v "$tool" >/dev/null || {
+    echo "!! $tool is not installed. brew install ffmpeg / apt install ffmpeg" >&2
+    exit 1
+  }
+done
+
 mkdir -p "$OUT/print" "$OUT/film" "$OUT/radio"
 
 skip() { [[ -z "${FORCE:-}" && -f "$1" ]]; }
 
-# Long edge of an image, via sips.
-long_edge() {
-  local w h
-  w=$(sips -g pixelWidth "$1" | awk '/pixelWidth/{print $2}')
-  h=$(sips -g pixelHeight "$1" | awk '/pixelHeight/{print $2}')
-  echo $(( w > h ? w : h ))
-}
-
-# resize <src> <dest> <max-long-edge> <quality>
-# Only ever downscales. Several originals (the AWF set is ~630px) are smaller
-# than the target and must not be blown up.
+# resize <src> <dest> <max-long-edge> <q:v>
+#
+# Only ever downscales. Several masters are smaller than the target — the AWF
+# set is about 630px on the long edge — and blowing those up would trade file
+# size for blur. Capping the requested width and height at the source's own
+# dimensions and letting force_original_aspect_ratio=decrease do the fitting
+# gives that for free, without measuring the image first.
+#
+# Two masters are PNGs with real transparency (minimum alpha 45 and 191). JPEG
+# has no alpha, and ffmpeg would flatten them onto black, putting a slab behind
+# artwork that belongs on paper. They go over white, which is what sips did.
+# Opaque sources pass through the same path unchanged, so there is one branch
+# rather than two to keep in step.
+#
+# A few outputs land a pixel away from what sips produced, because sips'
+# rounding is not consistent — it floors some and rounds others up. Rather
+# than reverse-engineer that, the dimensions declared in work.ts were resynced
+# to what this produces, so the numbers on the page match the files on disk.
+#
+# -q:v is ffmpeg's JPEG scale, 2 (best) to 31 — not the 0-100 one sips took.
 resize() {
   local src="$1" dest="$2" max="$3" q="$4"
-  if [[ "$(long_edge "$src")" -gt "$max" ]]; then
-    sips -Z "$max" -s format jpeg -s formatOptions "$q" "$src" --out "$dest" >/dev/null
-  else
-    sips -s format jpeg -s formatOptions "$q" "$src" --out "$dest" >/dev/null
-  fi
+  ffmpeg -nostdin -v error -i "$src" -filter_complex \
+    "[0:v]scale=w='min($max,iw)':h='min($max,ih)':force_original_aspect_ratio=decrease:flags=lanczos,format=rgba[fg];\
+     color=white[c];[c][fg]scale2ref[bg][fg2];[bg][fg2]overlay=shortest=1:format=auto,format=yuvj420p" \
+    -q:v "$q" "$dest" -y
 }
 
 print_asset() {
   local src="$SRC/print/$1" slug="$2"
   [[ -f "$src" ]] || { echo "  !! missing $src"; return; }
   if ! skip "$OUT/print/$slug.jpg"; then
-    resize "$src" "$OUT/print/$slug.jpg" "$PRINT_MAX" 80
+    resize "$src" "$OUT/print/$slug.jpg" "$PRINT_MAX" 4
   fi
   if ! skip "$OUT/print/$slug-t.jpg"; then
-    resize "$src" "$OUT/print/$slug-t.jpg" "$THUMB_MAX" 72
+    resize "$src" "$OUT/print/$slug-t.jpg" "$THUMB_MAX" 5
   fi
   if ! skip "$OUT/print/$slug-s.jpg"; then
-    resize "$src" "$OUT/print/$slug-s.jpg" "$MOSAIC_MAX" 66
+    resize "$src" "$OUT/print/$slug-s.jpg" "$MOSAIC_MAX" 6
   fi
   echo "  print  $slug"
 }

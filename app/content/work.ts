@@ -270,7 +270,7 @@ export const CAMPAIGNS: Campaign[] = [
         "Nation Media Group @60 ad: Kizza Besigye sitting in the road surrounded by police.",
         "There as Kizza Besigye was arrested for walking to work"
       ),
-      p("nmg-wangari", 1499, 1800, "Nation Media Group @60 ad: Wangari Maathai."),
+      p("nmg-wangari", 1500, 1800, "Nation Media Group @60 ad: Wangari Maathai."),
       p("nmg-sabasaba", 1001, 1200, "Nation Media Group @60 ad: Saba Saba."),
       p(
         "nmg-independence",
@@ -286,7 +286,7 @@ export const CAMPAIGNS: Campaign[] = [
         "Nation Media Group @60 ad: Tanzania's first female president."
       ),
       p("nmg-royal-wedding", 780, 935, "Nation Media Group @60 ad: a royal wedding."),
-      p("nmg-equator", 1499, 1800, "Nation Media Group full-page ad: Equator Sounds."),
+      p("nmg-equator", 1500, 1800, "Nation Media Group full-page ad: Equator Sounds."),
     ],
   },
   {
@@ -306,14 +306,14 @@ export const CAMPAIGNS: Campaign[] = [
       p(
         "peugeot-3008",
         1800,
-        1080,
+        1081,
         "Peugeot press ad: a 1968 Peugeot 504 and a 2019 Peugeot 3008 SUV side by side.",
         "The lion is back in the hood"
       ),
-      p("peugeot-2", 1800, 1080, "Peugeot 3008 campaign layout."),
-      p("peugeot-3", 1800, 1080, "Peugeot 3008 campaign layout."),
-      p("peugeot-4", 1800, 1080, "Peugeot 3008 campaign layout."),
-      p("peugeot-5", 1800, 1080, "Peugeot 3008 campaign layout."),
+      p("peugeot-2", 1800, 1081, "Peugeot 3008 campaign layout."),
+      p("peugeot-3", 1800, 1081, "Peugeot 3008 campaign layout."),
+      p("peugeot-4", 1800, 1081, "Peugeot 3008 campaign layout."),
+      p("peugeot-5", 1800, 1081, "Peugeot 3008 campaign layout."),
     ],
   },
 
