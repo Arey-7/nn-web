@@ -12,7 +12,7 @@ export type Job = {
  * The half of this page a client may see, and the only part that prints.
  *
  * It is deliberately given the quote object rather than the inputs: cost,
- * profit, margin and tithe are the agency's business and must never reach
+ * profit and margin are the agency's business and must never reach
  * this component's markup, because `@media print` shows exactly what is
  * inside `.quote-doc` and nothing else.
  */

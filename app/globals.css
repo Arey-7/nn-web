@@ -262,9 +262,8 @@ html:not(.dark) [data-webgl="hero"] {
 
 /* ---------------------------------------------------------------
    Print. The quote calculator is the only page meant to be printed,
-   and only the client-facing document on it: cost, profit, margin
-   and tithe live outside `.quote-doc` and must never come out of a
-   printer. Everything is hidden and the document alone is shown back,
+   and only the client-facing document on it: cost, profit and margin
+   live outside `.quote-doc` and must never come out of a printer. Everything is hidden and the document alone is shown back,
    so anything added to the page later is excluded by default.
    --------------------------------------------------------------- */
 

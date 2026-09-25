@@ -15,8 +15,8 @@
  * multiplied by the wrong quantity inside one expression; here a line can only
  * say something the form has shown the estimator.
  *
- * MARGIN, ROUND_TO, VAT_RATE and TITHE_RATE are the original print rules,
- * unchanged, and currently apply to every job type.
+ * MARGIN, ROUND_TO and VAT_RATE are the original print rules, unchanged,
+ * and currently apply to every job type.
  */
 
 /** Markup applied to cost to reach the quoted price. */
@@ -24,7 +24,6 @@ export const MARGIN = 0.35;
 /** The quote is rounded up to a whole multiple of this. */
 export const ROUND_TO = 200;
 export const VAT_RATE = 0.16;
-export const TITHE_RATE = 0.12;
 
 export const CURRENCY = "KSh";
 
@@ -216,7 +215,6 @@ export type Quote = {
   profit: number;
   /** null rather than NaN while there is no cost to take a percentage of. */
   marginPct: number | null;
-  tithe: number;
 };
 
 export function priceJob(job: JobType, v: Values): Quote {
@@ -248,7 +246,6 @@ export function priceJob(job: JobType, v: Values): Quote {
     payable: quote + vat,
     profit,
     marginPct: total > 0 ? (profit / total) * 100 : null,
-    tithe: Math.round(profit * TITHE_RATE),
   };
 }
 

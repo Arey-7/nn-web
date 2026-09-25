@@ -300,7 +300,6 @@ export default function Calculator() {
     ["Total cost", `${CURRENCY} ${money(q.total)}`],
     ["Profit", `${CURRENCY} ${money(q.profit)}`],
     ["Margin", q.marginPct === null ? "—" : `${q.marginPct.toFixed(2)}%`],
-    ["Tithe at 12%", `${CURRENCY} ${money(q.tithe)}`],
   ];
 
   return (
